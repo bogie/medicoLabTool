@@ -15,23 +15,26 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="loadLabButton">
           <property name="text">
-           <string>load</string>
+           <string>Einzelbefund laden</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="loadMultiButton">
           <property name="text">
-           <string>Copy</string>
+           <string>Kumulativbefund laden</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox"/>
         </item>
        </layout>
       </item>
@@ -39,7 +42,28 @@
        <widget class="QTextEdit" name="textEdit"/>
       </item>
       <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QPushButton" name="clearButton">
+          <property name="text">
+           <string>Nächster Patient</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="copyLabButton">
+          <property name="text">
+           <string>Labor in Zwischenablage kopieren</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
        <widget class="QTableWidget" name="tableWidget">
+        <property name="contextMenuPolicy">
+         <enum>Qt::CustomContextMenu</enum>
+        </property>
         <property name="editTriggers">
          <set>QAbstractItemView::DoubleClicked</set>
         </property>
@@ -55,7 +79,7 @@
      <x>0</x>
      <y>0</y>
      <width>864</width>
-     <height>17</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
