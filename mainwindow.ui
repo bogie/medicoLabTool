@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>864</width>
-    <height>615</height>
+    <width>1280</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,14 +15,14 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0">
+    <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QPushButton" name="loadLabButton">
           <property name="text">
-           <string>Einzelbefund laden</string>
+           <string>Einzelbefund laden 🗁</string>
           </property>
          </widget>
         </item>
@@ -39,21 +39,68 @@
        </layout>
       </item>
       <item>
-       <widget class="QTextEdit" name="textEdit"/>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QTextEdit" name="textEdit"/>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="rfWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
+          <row>
+           <property name="text">
+            <string>HbA1C</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>LDL</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>HDL</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>TG</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Cholesterin</string>
+           </property>
+          </row>
+          <column>
+           <property name="text">
+            <string>Wert</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QPushButton" name="clearButton">
           <property name="text">
-           <string>Nächster Patient</string>
+           <string>Nächster Patient🗑</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="copyLabButton">
           <property name="text">
-           <string>Labor in Zwischenablage kopieren</string>
+           <string>Labor in Zwischenablage kopieren 📋</string>
           </property>
          </widget>
         </item>
@@ -65,7 +112,7 @@
          <enum>Qt::CustomContextMenu</enum>
         </property>
         <property name="editTriggers">
-         <set>QAbstractItemView::DoubleClicked</set>
+         <set>QAbstractItemView::EditKeyPressed</set>
         </property>
        </widget>
       </item>
@@ -78,8 +125,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>864</width>
-     <height>21</height>
+     <width>1280</width>
+     <height>17</height>
     </rect>
    </property>
   </widget>

@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QMimeData>
 #include <QClipboard>
+#include <QTableWidgetItem>
 
 namespace Ui {
 class MainWindow;
@@ -33,9 +34,21 @@ private slots:
 
     void on_tableWidget_customContextMenuRequested(const QPoint &pos);
 
+    void on_setCellValue();
+
+    void on_copyRF();
+
+    void on_tableWidget_cellDoubleClicked(int row, int column);
+
+    void on_rfWidget_customContextMenuRequested(const QPoint &pos);
+
 private:
     Ui::MainWindow *ui;
     QMap<QString, int> indexes;
+    QMap<QString, int> rfIdxs;
+
+    void on_copyRow(int row);
+    void loadRFsIntoTable(QString p, QString v);
 };
 
 #endif // MAINWINDOW_H
