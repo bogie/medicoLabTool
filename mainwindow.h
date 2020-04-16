@@ -6,6 +6,7 @@
 #include <QMimeData>
 #include <QClipboard>
 #include <QTableWidgetItem>
+#include <QTableWidgetSelectionRange>
 
 namespace Ui {
 class MainWindow;
@@ -20,10 +21,6 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
-
     void on_clearButton_clicked();
 
     void on_loadLabButton_clicked();
@@ -37,6 +34,8 @@ private slots:
     void on_setCellValue();
 
     void on_copyRF();
+    void on_copyRow(int row);
+    void on_copySelection();
 
     void on_tableWidget_cellDoubleClicked(int row, int column);
 
@@ -47,7 +46,7 @@ private:
     QMap<QString, int> indexes;
     QMap<QString, int> rfIdxs;
 
-    void on_copyRow(int row);
+    QString parseValue(QString p, QString v);
     void loadRFsIntoTable(QString p, QString v);
 };
 

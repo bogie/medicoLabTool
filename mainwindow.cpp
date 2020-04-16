@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     indexes["CRP"] = 25;
     indexes["PCTKM"] = 26;
     indexes["FERR"] = 27;
+    // VBG
     indexes["PHV"] = 28;
     indexes["PCO2V"] = 29;
     indexes["HCO3V"] = 30;
@@ -59,6 +60,22 @@ MainWindow::MainWindow(QWidget *parent) :
     indexes["SO2V"] = 33;
     indexes["METHn"] = 34;
     indexes["COHBn"] = 35;
+    // ABG
+    indexes["POC_CNA+"] = 9;
+    indexes["POC_CK+"] = 10;
+    indexes["POC_PH_T"] = 28;
+    indexes["POC_PCO2_T"] = 29;
+    indexes["POC_HCO3"] = 30;
+    indexes["POC_ABE"] = 31;
+    indexes["POC_PO2_T"] = 32;
+    indexes["POC_SO2"] = 33;
+    indexes["POC_FMETHB"] = 34;
+    indexes["POC_FCOHGB"] = 35;
+    // no _T
+    indexes["POC_PH"] = 28;
+    indexes["POC_PCO2"] = 29;
+    indexes["POC_PO2"] = 32;
+    //
     indexes["MYO"] = 36;
     indexes["IL2R"] = 37;
     indexes["IL6KE"] = 38;
@@ -74,13 +91,19 @@ MainWindow::MainWindow(QWidget *parent) :
     indexes["QC3438"] = 48;
     indexes["N1656A"] = 49;
     indexes["N1656"] = 50;
+    indexes["ALSP"] = 51;
+    indexes["KRSP"] = 52;
     indexes["9ACEYE"] = 53;
+    indexes["POC_CLAC"] = 54;
 
     rfIdxs["9HBA1CM"] = 0;
     rfIdxs["LDLC"] = 1;
     rfIdxs["HDLC"] = 2;
     rfIdxs["TRIG"] = 3;
     rfIdxs["CHOL"] = 4;
+    rfIdxs["TSHKK"] = 5;
+    rfIdxs["9FT3KK"] = 6;
+    rfIdxs["9FT4KK"] = 7;
 }
 
 MainWindow::~MainWindow()
@@ -88,58 +111,33 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()
-{
-
-}
-
-void MainWindow::on_pushButton_2_clicked()
-{
-
-}
-
 void MainWindow::on_loadLabButton_clicked()
 {
     QString data = ui->textEdit->toPlainText();
+    if(data.length()==0)
+        return;
     QStringList strList = data.split(QRegExp("[\n]"),QString::SkipEmptyParts);
     int lastRow = ui->tableWidget->rowCount();
     qDebug() << "rowCount before insert is: " << lastRow;
     ui->tableWidget->insertRow(lastRow);
-    qDebug() << "rowCount before insert is: " << ui->tableWidget->rowCount();
+    qDebug() << "rowCount after insert is: " << ui->tableWidget->rowCount();
+    bool itemsAdded = false;
 
     foreach(QString str, strList) {
-        QStringList split = str.split("	");
+        QStringList split = str.split("\t");
         if(split.length()<2)
             continue;
         QString p = split[0];
-        QString v= split[2];
+        QString v = parseValue(p,split[2]);
 
-
-        if(v.contains(QRegExp("[+-]?([0-9]*[.])?[0-9]+")) || v == "folgt") {
-            v = v.simplified().remove(" ");
-            v = v.remove("<").remove(">").remove("+").remove("-");
-            qDebug() << "p: " << p << "v: " << v;
-            if(p == "9ALBO") {
-                // mg/dl statt g/dl! FAKTOR 1000!
-                double albo = v.toDouble();
-                albo  /= 1000;
-                qDebug() << "v is now: " << v;
-                qDebug() << "albo is now: " << albo;
-                v = QString::number(albo);
-                qDebug() << "v is now: " << v;
-            }
-            if(ui->comboBox->currentIndex()== 0){
-                v = v.replace(".",",");
-            } else {
-                v = v.replace(",",".");
-            }
-
+        if(v.length()>0) {
             int idx = indexes.value(p, -1);
             if(idx>=0) {
                 qDebug() << "found idx: " << idx;
                 QTableWidgetItem *item = new QTableWidgetItem(v);
                 item->setTextAlignment(Qt::AlignCenter);
                 ui->tableWidget->setItem(lastRow,idx,item);
+                itemsAdded = true;
             }
 
             if(rfIdxs.contains(p)){
@@ -148,6 +146,65 @@ void MainWindow::on_loadLabButton_clicked()
 
         }
     }
+
+    if(!itemsAdded)
+        ui->tableWidget->removeRow(lastRow);
+
+    ui->textEdit->clear();
+}
+
+void MainWindow::on_loadMultiButton_clicked()
+{
+    QString data = ui->textEdit->toPlainText();
+    if(data.length()==0)
+        return;
+    QStringList strList = data.split(QRegExp("[\n]"),QString::SkipEmptyParts);
+    int labCount = strList.at(0).split("\t").length();
+    qDebug() << "multi has: " << labCount-3 << " labs";
+    int curRow = ui->tableWidget->rowCount();
+    ui->tableWidget->setRowCount(ui->tableWidget->rowCount()+labCount);
+
+    foreach(QString str, strList) {
+        qDebug() << str;
+        QStringList split = str.split("\t");
+        QString p = split[0];
+        for(int i=4;i<split.length();i++) {
+            QString v = parseValue(p,split[i]);
+            if(v.length()>0) {
+                if(rfIdxs.contains(p)){
+                    loadRFsIntoTable(p,v);
+                }
+
+                int idx = indexes.value(p, -1);
+                if(idx>=0) {
+                    qDebug() << "found idx: " << idx;
+                    QTableWidgetItem *item = new QTableWidgetItem(v);
+                    item->setTextAlignment(Qt::AlignCenter);
+                    ui->tableWidget->setItem(curRow,idx,item);
+                }
+            }
+            curRow++;
+        }
+        curRow = ui->tableWidget->rowCount()-labCount;
+    }
+    for(int r = ui->tableWidget->rowCount()-1; r>=0; r-- ) {
+        bool hasValue = false;
+        for(int c = 0; c< ui->tableWidget->columnCount(); c++) {
+            QTableWidgetItem* item = ui->tableWidget->item(r,c);
+            if(item != nullptr){
+                hasValue = true;
+            }
+            /*if(item->text().length()>0){
+                qDebug() << "row: " << r << " has non-empty value: " << item->text() << " at column: " << c;
+                hasValue = true;
+            }*/
+        }
+        if(!hasValue){
+            qDebug() << "removing row: " << r;
+            ui->tableWidget->removeRow(r);
+        }
+    }
+    ui->textEdit->clear();
 }
 
 void MainWindow::on_copyLabButton_clicked()
@@ -185,78 +242,16 @@ void MainWindow::on_clearButton_clicked()
     ui->textEdit->clear();
 }
 
-void MainWindow::on_loadMultiButton_clicked()
-{
-    QString data = ui->textEdit->toPlainText();
-    QStringList strList = data.split(QRegExp("[\n]"),QString::SkipEmptyParts);
-    int labCount = strList.at(0).split("\t").length();
-    qDebug() << "multi has: " << labCount-3 << " labs";
-    int curRow = ui->tableWidget->rowCount();
-    ui->tableWidget->setRowCount(ui->tableWidget->rowCount()+labCount);
-    foreach(QString str, strList) {
-        qDebug() << str;
-        QStringList split = str.split("\t");
-        QString p = split[0];
-        for(int i=4;i<split.length();i++) {
-            QString v = split[i];
-            if(v.contains(QRegExp("[+-]?([0-9]*[.])?[0-9]+")) || v == "folgt") {
-                v = v.simplified().remove(" ");
-                v = v.remove("<").remove(">").remove("+").remove("-");
+// Context Menus
 
-                qDebug() << "p: " << p << "v: " << v;
-                if(p == "9ALBO") {
-                    // mg/dl statt g/dl! FAKTOR 1000!
-                    double albo = v.toDouble();
-                    albo  /= 1000;
-                    qDebug() << "v is now: " << v;
-                    qDebug() << "albo is now: " << albo;
-                    v = QString::number(albo);
-                    qDebug() << "v is now: " << v;
-                }
-                if(ui->comboBox->currentIndex()== 0){
-                    v = v.replace(".",",");
-                } else {
-                    v = v.replace(",",".");
-                }
-
-                if(rfIdxs.contains(p)){
-                    loadRFsIntoTable(p,v);
-                }
-
-                int idx = indexes.value(p, -1);
-                if(idx>=0) {
-                    qDebug() << "found idx: " << idx;
-                    QTableWidgetItem *item = new QTableWidgetItem(v);
-                    item->setTextAlignment(Qt::AlignCenter);
-                    ui->tableWidget->setItem(curRow,idx,item);
-                }
-            }
-            curRow++;
-        }
-        curRow = ui->tableWidget->rowCount()-labCount;
-    }
-    for(int r = ui->tableWidget->rowCount()-1; r>=0; r-- ) {
-        bool hasValue = false;
-        for(int c = 0; c< ui->tableWidget->columnCount(); c++) {
-            QTableWidgetItem* item = ui->tableWidget->item(r,c);
-            if(item != nullptr){
-                hasValue = true;
-            }
-            /*if(item->text().length()>0){
-                qDebug() << "row: " << r << " has non-empty value: " << item->text() << " at column: " << c;
-                hasValue = true;
-            }*/
-        }
-        if(!hasValue){
-            qDebug() << "removing row: " << r;
-            ui->tableWidget->removeRow(r);
-        }
-    }
-}
+// tableWidget
 
 void MainWindow::on_tableWidget_customContextMenuRequested(const QPoint &pos)
 {
     QTableWidgetItem* item = ui->tableWidget->itemAt(pos);
+    if(ui->tableWidget->rowCount()==0) {
+        return;
+    }
 
 
     QMenu *menu = new QMenu(this);
@@ -264,21 +259,40 @@ void MainWindow::on_tableWidget_customContextMenuRequested(const QPoint &pos)
     QAction *setCellValue = new QAction("Wert übernehmen ✓",this);
     setCellValue->setStatusTip("Übernimmt den Wert in die erste Zeile");
     connect(setCellValue, SIGNAL(triggered()), this, SLOT(on_setCellValue()));
-    QAction *editCell = new QAction("Zelle editieren ✍", this);
+    QAction *editCell = new QAction("Wert editieren ✍", this);
     connect(editCell, &QAction::triggered,this,
-            [=]() { ui->tableWidget->editItem(item); });
+            [=]() {
+        if(!item){
+            QTableWidgetItem* it = new QTableWidgetItem("");
+            it->setTextAlignment(Qt::AlignCenter);
+            ui->tableWidget->setItem(ui->tableWidget->rowAt(pos.y()),ui->tableWidget->columnAt(pos.x()), it);
+            ui->tableWidget->editItem(it);
+        } else
+            ui->tableWidget->editItem(item);
+    });
 
-    QAction *copyRow = new QAction("Zeile kopieren📋",this);
+    QAction *copyRow = new QAction("Ganze Zeile kopieren📋",this);
     connect(copyRow, &QAction::triggered, this,
             [=]() { int row = ui->tableWidget->rowAt(pos.y()); on_copyRow(row); });
     if(item == nullptr){
         qDebug() << " no item at this position";
     } else {
         menu->addAction(setCellValue);
+
     }
+
     menu->addAction(editCell);
+    menu->addSeparator();
     menu->addAction(copyRow);
 
+    if(ui->tableWidget->selectedItems().length()>1) {
+        QAction *copySelection = new QAction("Auswahl kopieren");
+        connect(copySelection, &QAction::triggered, this, [=]() {
+            on_copySelection();
+        });
+        menu->addSeparator();
+        menu->addAction(copySelection);
+    }
 
     menu->popup(ui->tableWidget->viewport()->mapToGlobal(pos));
 }
@@ -297,9 +311,8 @@ void MainWindow::on_setCellValue()
             ui->tableWidget->setItem(0,item->column(),target);
         } else
             target->setText(item->text());
+        target->setTextAlignment(Qt::AlignCenter);
     }
-
-
 }
 
 void MainWindow::on_tableWidget_cellDoubleClicked(int row, int column)
@@ -315,6 +328,7 @@ void MainWindow::on_tableWidget_cellDoubleClicked(int row, int column)
         ui->tableWidget->setItem(0,item->column(),target);
     } else
         target->setText(item->text());
+    target->setTextAlignment(Qt::AlignCenter);
 }
 
 void MainWindow::on_copyRow(int row)
@@ -338,6 +352,40 @@ void MainWindow::on_copyRow(int row)
     QApplication::clipboard()->setMimeData(mimeData);
 }
 
+void MainWindow::on_copySelection()
+{
+    QByteArray items;
+    QList<QTableWidgetItem*> selected = ui->tableWidget->selectedItems();
+    QList<QTableWidgetSelectionRange> ranges = ui->tableWidget->selectedRanges();
+    foreach(QTableWidgetItem* item, selected) {
+        if(item == nullptr) {
+            items.append("");
+            return;
+        } else {
+            items.append(item->text());
+        }
+        items.append("\t");
+    }
+    if(items.endsWith("\t")){
+        items.remove(items.lastIndexOf("\t"),1);
+    }
+    QMimeData *mimeData = new QMimeData();
+    mimeData->setData("text/plain",items);
+    QApplication::clipboard()->setMimeData(mimeData);
+}
+
+// rfWidget
+void MainWindow::on_rfWidget_customContextMenuRequested(const QPoint &pos)
+{
+    QMenu *menu = new QMenu(this);
+
+    QAction *copyRF = new QAction("Risikofaktoren kopieren📋",this);
+    connect(copyRF, &QAction::triggered, this, &MainWindow::on_copyRF);
+
+    menu->addAction(copyRF);
+    menu->popup(ui->rfWidget->viewport()->mapToGlobal(pos));
+}
+
 void MainWindow::on_copyRF()
 {
     QByteArray items;
@@ -357,19 +405,6 @@ void MainWindow::on_copyRF()
     QApplication::clipboard()->setMimeData(mimeData);
 }
 
-
-
-void MainWindow::on_rfWidget_customContextMenuRequested(const QPoint &pos)
-{
-    QMenu *menu = new QMenu(this);
-
-    QAction *copyRF = new QAction("Risikofaktoren kopieren📋",this);
-    connect(copyRF, &QAction::triggered, this, &MainWindow::on_copyRF);
-
-    menu->addAction(copyRF);
-    menu->popup(ui->rfWidget->viewport()->mapToGlobal(pos));
-}
-
 void MainWindow::loadRFsIntoTable(QString p, QString v)
 {
     qDebug() << "loadRFsIntoTable: " << p << v;
@@ -381,4 +416,32 @@ void MainWindow::loadRFsIntoTable(QString p, QString v)
             ui->rfWidget->setItem(row,0,item);
         }
     }
+}
+
+QString MainWindow::parseValue(QString p, QString v)
+{
+    QString output;
+    if(v.contains(QRegExp("[+-]?([0-9]*[.])?[0-9]+")) || v == "folgt") {
+        output = v.simplified().remove(" ");
+        output = output.remove("<").remove(">").remove("+").remove("N").remove("?");
+        if(output.endsWith("-"))
+            output = v.remove("-");
+        qDebug() << "p: " << p << "output: " << output;
+        if(p == "9ALBO") {
+            // mg/dl statt g/dl! FAKTOR 1000!
+            double albo = output.toDouble();
+            albo  /= 1000;
+            qDebug() << "output is now: " << output;
+            qDebug() << "albo is now: " << albo;
+            output = QString::number(albo);
+            qDebug() << "output is now: " << output;
+        }
+        if(ui->comboBox->currentIndex()== 0){
+            output = output.replace(".",",");
+        } else {
+            output = output.replace(",",".");
+        }
+    } else
+        output = "";
+    return output;
 }
