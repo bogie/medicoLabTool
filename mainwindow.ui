@@ -28,6 +28,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="loadMultiButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Kumulativbefund laden</string>
           </property>
@@ -53,53 +56,13 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>400</width>
+            <width>500</width>
             <height>0</height>
            </size>
           </property>
           <property name="contextMenuPolicy">
            <enum>Qt::CustomContextMenu</enum>
           </property>
-          <row>
-           <property name="text">
-            <string>HbA1C</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>LDL</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>HDL</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>TG</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>Cholesterin</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>TSH</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>fT3</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>fT4</string>
-           </property>
-          </row>
           <column>
            <property name="text">
             <string>Wert</string>
@@ -120,8 +83,11 @@
         </item>
         <item>
          <widget class="QPushButton" name="copyLabButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
-           <string>Labor in Zwischenablage kopieren 📋</string>
+           <string>Alle Labore kopieren</string>
           </property>
          </widget>
         </item>
@@ -134,6 +100,12 @@
         </property>
         <property name="editTriggers">
          <set>QAbstractItemView::EditKeyPressed</set>
+        </property>
+        <property name="dragEnabled">
+         <bool>false</bool>
+        </property>
+        <property name="dragDropMode">
+         <enum>QAbstractItemView::InternalMove</enum>
         </property>
        </widget>
       </item>

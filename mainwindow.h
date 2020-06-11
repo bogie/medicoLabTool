@@ -7,6 +7,11 @@
 #include <QClipboard>
 #include <QTableWidgetItem>
 #include <QTableWidgetSelectionRange>
+#include <QHeaderView>
+#include <QInputDialog>
+#include <QLineEdit>
+
+#include "labvalue.h"
 
 namespace Ui {
 class MainWindow;
@@ -30,6 +35,8 @@ private slots:
     void on_loadMultiButton_clicked();
 
     void on_tableWidget_customContextMenuRequested(const QPoint &pos);
+    void on_verticalHeader_customContextMenuRequested(const QPoint &pos);
+    void on_verticalHeader_doubleClicked(int row);
 
     void on_setCellValue();
 
@@ -47,7 +54,8 @@ private:
     QMap<QString, int> rfIdxs;
 
     QString parseValue(QString p, QString v);
-    void loadRFsIntoTable(QString p, QString v);
+    void loadRFsIntoTable(QString p, QString v, QString c);
+    void loadRFsIntoTable(LabValue lab);
 };
 
 #endif // MAINWINDOW_H

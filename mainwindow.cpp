@@ -6,17 +6,31 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QHeaderView* header = ui->tableWidget->verticalHeader();
+    header->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(header, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on_verticalHeader_customContextMenuRequested(QPoint)));
+    connect(header, SIGNAL(sectionDoubleClicked(int)),this, SLOT(on_verticalHeader_doubleClicked(int)));
     ui->comboBox->addItem("Komma");
     ui->comboBox->addItem("Punkt");
     ui->comboBox->setCurrentIndex(0);
-    ui->tableWidget->setColumnCount(55);
+
 
     QStringList headers;
-    headers << "Leukozyten" << "Haemoglobin" << "Thrombozyten" << "Lymphozyten" << "Eosinophile" << "INR" << "aPTT" << "D-Dimere" << "TZ" << "Natrium" << "Kalium" << "Albumin" << "Bilirubin(ges)"
-            << "Bilirubin(dir)" << "AST" << "ALT" << "gGT" << "AP" << "LDH" << "CK" << "CK-MB" << "TroponinT" << "NTproBNP" << "Harnstoff" << "Kreatinin" << "CRP" << "Procalcitonin"
-            << "Ferritin" << "pH(venös)" << "pCO2(venös)" << "Standardbicarbonat" << "Standard-Base-Excess" << "pO2(venös)" << "Sauerstoffsättigung(venös)" << "Methaemoglobin" << "CO-Haemoglobin"
-            << "Myoglobin" << "sIL-2" << "IL-6" << "TNFalpha" << "B Lymphoz CD19+ abs" << "B Lymphoz CD19+ rel" << "T Lymph CD3+ abs" << "T Lymph CD3+ rel" << "T Helfer CD3+CD4+abs"
-            << "T Helfer CD3+CD4+rel" << "T Suppr CD3+CD8+ abs" << "T Suppr CD3+CD8+ rel" << "Quot CD3 CD4/CD3 CD8" << "NK Zel CD16+/56+ abs" << "NK Zel CD16+/56+rel" << "Albumin(Urin)" << "Kreatinin(Urin)" << "ACE" << "cLac";
+    headers << "Leukozyten" << "Haemoglobin" << "Thrombozyten" << "Lymphozyten" << "Eosinophile"
+            << "INR" << "aPTT" << "ATIII" << "Fibrinogen" << "D-Dimere" << "TZ"
+            << "Natrium" << "Kalium" << "Phosphat"
+            << "Albumin" << "Bilirubin(ges)" << "Bilirubin(dir)" << "AST" << "ALT" << "gGT" << "AP"
+            << "LDH" << "CK" << "CK-MB" << "TroponinT" << "NTproBNP"
+            << "Harnstoff" << "Kreatinin" << "CRP" << "Procalcitonin"
+            << "Laktat" << "Eisen" << "Transferrinsättigung" << "Ferritin"
+            << "Protein (qual)" << "DysErys" << "Kreatinin SpU" << "Harnstoff-Krea-Quotient SpU" << "Albumin SpU"
+            << "pH" << "pCO2" << "Standardbicarbonat" << "Standard-Base-Excess" << "pO2" << "Sauerstoffsättigung" << "Methaemoglobin" << "CO-Haemoglobin"
+            << "CystatinC" << "Myoglobin" << "Copeptin" << "Aldosteron" << "sIL-2" << "IL-6" << "TNFalpha"
+            << "B Lymphoz CD19+ abs" << "B Lymphoz CD19+ rel" << "T Lymph CD3+ abs" << "T Lymph CD3+ rel" << "T Helfer CD3+CD4+abs" << "T Helfer CD3+CD4+rel"
+            << "T Suppr CD3+CD8+ abs" << "T Suppr CD3+CD8+ rel" << "Quot CD3 CD4/CD3 CD8" << "NK Zel CD16+/56+ abs" << "NK Zel CD16+/56+rel"
+            << "ACE" << "Glukose";
+
+    ui->tableWidget->setColumnCount(headers.length());
     ui->tableWidget->setHorizontalHeaderLabels(headers);
 
     indexes = QMap<QString, int>();
@@ -26,84 +40,112 @@ MainWindow::MainWindow(QWidget *parent) :
     indexes["LYMR"] = 3;
     indexes["LYMM"] = 3;
     indexes["EOSR"] = 4;
-    indexes["EOSM"] =4;
+    indexes["EOSM"] = 4;
     indexes["INR"] = 5;
     indexes["PTT"] = 6;
-    indexes["DD"] = 7;
-    indexes["TZ"] = 8;
-    indexes["NA"] = 9;
-    indexes["K"] = 10;
-    indexes["9ALB"] = 11;
-    indexes["9ALBO"] = 11;
-    indexes["TBIL"] = 12;
-    indexes["DBIL"] = 13;
-    indexes["AST37"] = 14;
-    indexes["ALT37"] = 15;
-    indexes["GGT37"] = 16;
-    indexes["AP37"] = 17;
-    indexes["LDH37"] = 18;
-    indexes["CK37"] = 19;
-    indexes["CKMB"] = 20;
-    indexes["TNTHS"] = 21;
-    indexes["NTpBNP2"] = 22;
-    indexes["HST"] = 23;
-    indexes["KREA"] = 24;
-    indexes["CRP"] = 25;
-    indexes["PCTKM"] = 26;
-    indexes["FERR"] = 27;
+    indexes["AT3"] = 7;
+    indexes["9FIB"] = 8;
+    indexes["DD"] = 9;
+    indexes["TZ"] = 10;
+    indexes["NA"] = 11;
+    indexes["K"] = 12;
+    indexes["PHOS"] = 13;
+    indexes["9ALB"] = 14;
+    indexes["9ALBO"] = 14;
+    indexes["TBIL"] = 15;
+    indexes["DBIL"] = 16;
+    indexes["AST37"] = 17;
+    indexes["ALT37"] = 18;
+    indexes["GGT37"] = 19;
+    indexes["AP37"] = 20;
+    indexes["LDH37"] = 21;
+    indexes["CK37"] = 22;
+    //indexes["CKMB"] = 23;
+    indexes["CKMBMa"] = 23;
+    indexes["TNTHS"] = 24;
+    indexes["NTpBNP2"] = 25;
+    indexes["HST"] = 26;
+    indexes["KREA"] = 27;
+    indexes["CRP"] = 28;
+    indexes["PCTKM"] = 29;
+    indexes["LACT"] = 30; // LDZ Laktat
+    indexes["POC_CLAC"] = 30; // BGA Laktat
+    indexes["9FE"] = 31;
+    indexes["TRAFS"] = 32;
+    indexes["FERR"] = 33;
+    // Proteinurie
+    indexes["9TPU"] = 34;
+    indexes["DERY"] = 35;
+    indexes["KRSP"] = 36;
+    indexes["HSKRQ"] = 37;
+    indexes["ALSP"] = 38;
     // VBG
-    indexes["PHV"] = 28;
-    indexes["PCO2V"] = 29;
-    indexes["HCO3V"] = 30;
-    indexes["SBEV"] = 31;
-    indexes["PO2V"] = 32;
-    indexes["SO2V"] = 33;
-    indexes["METHn"] = 34;
-    indexes["COHBn"] = 35;
+    indexes["PHV"] = 39;
+    indexes["PCO2V"] = 40;
+    indexes["HCO3V"] = 41;
+    indexes["SBEV"] = 42;
+    indexes["PO2V"] = 43;
+    indexes["SO2V"] = 44;
+    indexes["METHn"] = 45;
+    indexes["COHBn"] = 46;
     // ABG
-    indexes["POC_CNA+"] = 9;
-    indexes["POC_CK+"] = 10;
-    indexes["POC_PH_T"] = 28;
-    indexes["POC_PCO2_T"] = 29;
-    indexes["POC_HCO3"] = 30;
-    indexes["POC_ABE"] = 31;
-    indexes["POC_PO2_T"] = 32;
-    indexes["POC_SO2"] = 33;
-    indexes["POC_FMETHB"] = 34;
-    indexes["POC_FCOHGB"] = 35;
+    indexes["POC_CNA+"] = 11;
+    indexes["POC_CK+"] = 12;
+    indexes["POC_PH_T"] = 39;
+    indexes["POC_PCO2_T"] = 40;
+    indexes["POC_HCO3"] = 41;
+    indexes["POC_ABE"] = 42;
+    indexes["POC_PO2_T"] = 43;
+    indexes["POC_SO2"] = 44;
+    indexes["POC_FMETHB"] = 45;
+    indexes["POC_FCOHGB"] = 46;
     // no _T
-    indexes["POC_PH"] = 28;
-    indexes["POC_PCO2"] = 29;
-    indexes["POC_PO2"] = 32;
+    indexes["POC_PH"] = 39;
+    indexes["POC_PCO2"] = 40;
+    indexes["POC_PO2"] = 43;
     //
-    indexes["MYO"] = 36;
-    indexes["IL2R"] = 37;
-    indexes["IL6KE"] = 38;
-    indexes["TNFA"] = 39;
-    indexes["BC19A"] = 40;
-    indexes["BC19"] = 41;
-    indexes["TC3A"] = 42;
-    indexes["TC3"] = 43;
-    indexes["HC34A"] = 44;
-    indexes["HC34"] = 45;
-    indexes["SZC38A"] = 46;
-    indexes["SZC38"] = 47;
-    indexes["QC3438"] = 48;
-    indexes["N1656A"] = 49;
-    indexes["N1656"] = 50;
-    indexes["ALSP"] = 51;
-    indexes["KRSP"] = 52;
-    indexes["9ACEYE"] = 53;
-    indexes["POC_CLAC"] = 54;
+    indexes["CYSCK"] = 47;
+    indexes["MYO"] = 48;
+    indexes["AVP"] = 49;
+    indexes["9ADSTi"] = 50;
+    indexes["IL2R"] = 51;
+    indexes["IL6KE"] = 52;
+    indexes["TNFA"] = 53;
+    indexes["BC19A"] = 54;
+    indexes["BC19"] = 55;
+    indexes["TC3A"] = 56;
+    indexes["TC3"] = 57;
+    indexes["HC34A"] = 58;
+    indexes["HC34"] = 59;
+    indexes["SZC38A"] = 60;
+    indexes["SZC38"] = 61;
+    indexes["QC3438"] = 62;
+    indexes["N1656A"] = 63;
+    indexes["N1656"] = 64;
+    indexes["9ACEYE"] = 65;
 
+
+    // Glukose = LDZ, BGA, BZGerät
+    indexes["GLUC"] = 66;
+    indexes["POC_CGLU"] = 66;
+    indexes["POC_GLU_HEM"] = 66;
+
+    QStringList rfRowHeaders;
+    rfRowHeaders << "HbA1C" << "LDL" << "HDL" << "Triglyceride" << "Cholesterin" << "Lp(a)" << "TSH"
+                 << "fT3" << "fT4" << "25-OH-VitD3" << "1,25-OH-VitD3";
+    ui->rfWidget->setRowCount(rfRowHeaders.length());
+    ui->rfWidget->setVerticalHeaderLabels(rfRowHeaders);
     rfIdxs["9HBA1CM"] = 0;
     rfIdxs["LDLC"] = 1;
     rfIdxs["HDLC"] = 2;
     rfIdxs["TRIG"] = 3;
     rfIdxs["CHOL"] = 4;
-    rfIdxs["TSHKK"] = 5;
-    rfIdxs["9FT3KK"] = 6;
-    rfIdxs["9FT4KK"] = 7;
+    rfIdxs["99LPAK"] = 5;
+    rfIdxs["TSHKK"] = 6;
+    rfIdxs["9FT3KK"] = 7;
+    rfIdxs["9FT4KK"] = 8;
+    rfIdxs["VD25T"] = 9;
+    rfIdxs["VD125"] = 10;
 }
 
 MainWindow::~MainWindow()
@@ -124,27 +166,58 @@ void MainWindow::on_loadLabButton_clicked()
     bool itemsAdded = false;
 
     foreach(QString str, strList) {
-        QStringList split = str.split("\t");
+        LabValue lab = LabValue(str,false);
+        if(lab.success == false)
+            continue;
+
+        int idx = indexes.value(lab.param,-1);
+        if(idx>=0) {
+            QString value = lab.getValue(ui->comboBox->currentIndex());
+            QString prettyValue = value;
+            if(value != "entfällt" & value != "s.Bem")
+                prettyValue += lab.unit;
+            QTableWidgetItem* item = new QTableWidgetItem(prettyValue);
+            item->setData(256,value);
+            item->setTextAlignment(Qt::AlignCenter);
+            item->setToolTip(lab.comment);
+            /*if(lab.comment.length()>0) {
+                QIcon icon = QIcon(":/icons/warning.jpg");
+                item->setIcon(icon);
+            }*/
+            if(lab.flag=="+")
+                item->setBackgroundColor(QColor(Qt::GlobalColor::red));
+            else if(lab.flag=="-")
+                item->setBackgroundColor(QColor(Qt::GlobalColor::blue));
+            ui->tableWidget->setItem(lastRow,idx,item);
+            itemsAdded = true;
+        } else if(rfIdxs.contains(lab.param)) {
+            loadRFsIntoTable(lab);
+        }
+        /*QStringList split = str.split("\t");
         if(split.length()<2)
             continue;
         QString p = split[0];
         QString v = parseValue(p,split[2]);
+        QString c = split[8]; // Comment in single view
 
         if(v.length()>0) {
             int idx = indexes.value(p, -1);
             if(idx>=0) {
                 qDebug() << "found idx: " << idx;
                 QTableWidgetItem *item = new QTableWidgetItem(v);
+                item->setToolTip(c);
+                if(c.length() > 0)
+                    item->setBackgroundColor(QColor(Qt::GlobalColor::lightGray));
                 item->setTextAlignment(Qt::AlignCenter);
                 ui->tableWidget->setItem(lastRow,idx,item);
                 itemsAdded = true;
             }
 
             if(rfIdxs.contains(p)){
-                loadRFsIntoTable(p,v);
+                loadRFsIntoTable(p,v,c);
             }
 
-        }
+        }*/
     }
 
     if(!itemsAdded)
@@ -172,13 +245,14 @@ void MainWindow::on_loadMultiButton_clicked()
             QString v = parseValue(p,split[i]);
             if(v.length()>0) {
                 if(rfIdxs.contains(p)){
-                    loadRFsIntoTable(p,v);
+                    loadRFsIntoTable(p,v,"");
                 }
 
                 int idx = indexes.value(p, -1);
                 if(idx>=0) {
                     qDebug() << "found idx: " << idx;
                     QTableWidgetItem *item = new QTableWidgetItem(v);
+                    item->setData(256,v);
                     item->setTextAlignment(Qt::AlignCenter);
                     ui->tableWidget->setItem(curRow,idx,item);
                 }
@@ -211,17 +285,23 @@ void MainWindow::on_copyLabButton_clicked()
 {
     QByteArray items;
     qDebug() << "onCopy: roWcount is: " << ui->tableWidget->rowCount();
-    for(int i = 0; i< ui->tableWidget->columnCount(); i++) {
+    for(int r = 0; r < ui->tableWidget->rowCount(); r++) {
+        items.append(ui->tableWidget->verticalHeaderItem(r)->text());
+        items.append("\t\t");
 
-        QTableWidgetItem* t = ui->tableWidget->item(0,i);
-        if(t == nullptr) {
-            //qDebug() << "t is null!";
-            items.append("");
-        } else {
-            items.append(t->text());
+        for(int c = 0; c < ui->tableWidget->columnCount(); c++) {
+            QTableWidgetItem* t = ui->tableWidget->item(r,c);
+            if(t == nullptr) {
+                //qDebug() << "t is null!";
+                items.append("");
+            } else {
+                items.append(t->data(256).toString());
+            }
+            if(c < ui->tableWidget->columnCount()-1)
+                items.append("\t");
         }
-        if(i< ui->tableWidget->columnCount()-1)
-            items.append("\t");
+        if(r< ui->tableWidget->rowCount()-1)
+            items.append("\n");
     }
     QMimeData *mimeData = new QMimeData();
     mimeData->setData("text/plain",items);
@@ -248,6 +328,7 @@ void MainWindow::on_clearButton_clicked()
 
 void MainWindow::on_tableWidget_customContextMenuRequested(const QPoint &pos)
 {
+
     QTableWidgetItem* item = ui->tableWidget->itemAt(pos);
     if(ui->tableWidget->rowCount()==0) {
         return;
@@ -259,7 +340,7 @@ void MainWindow::on_tableWidget_customContextMenuRequested(const QPoint &pos)
     QAction *setCellValue = new QAction("Wert übernehmen ✓",this);
     setCellValue->setStatusTip("Übernimmt den Wert in die erste Zeile");
     connect(setCellValue, SIGNAL(triggered()), this, SLOT(on_setCellValue()));
-    QAction *editCell = new QAction("Wert editieren ✍", this);
+    /*QAction *editCell = new QAction("Wert editieren ✍", this);
     connect(editCell, &QAction::triggered,this,
             [=]() {
         if(!item){
@@ -269,7 +350,7 @@ void MainWindow::on_tableWidget_customContextMenuRequested(const QPoint &pos)
             ui->tableWidget->editItem(it);
         } else
             ui->tableWidget->editItem(item);
-    });
+    });*/
 
     QAction *copyRow = new QAction("Ganze Zeile kopieren📋",this);
     connect(copyRow, &QAction::triggered, this,
@@ -281,7 +362,7 @@ void MainWindow::on_tableWidget_customContextMenuRequested(const QPoint &pos)
 
     }
 
-    menu->addAction(editCell);
+    //menu->addAction(editCell);
     menu->addSeparator();
     menu->addAction(copyRow);
 
@@ -294,7 +375,61 @@ void MainWindow::on_tableWidget_customContextMenuRequested(const QPoint &pos)
         menu->addAction(copySelection);
     }
 
+    QAction *deleteRow = new QAction("Ganze Zeile löschen");
+    connect(deleteRow, &QAction::triggered, this, [=]() {
+        if(ui->tableWidget->selectedRanges().length()>0) {
+            QList<QTableWidgetSelectionRange> ranges = ui->tableWidget->selectedRanges();
+            qDebug() << "got ranges length: " << ranges.length();
+            for(int i = ranges.length(); i>0; i--) {
+                QTableWidgetSelectionRange range = ranges.at(i-1);
+                if((range.bottomRow()-range.topRow()) >= 1) {
+                    for(int r = range.bottomRow(); r >= range.topRow(); r--) {
+                        qDebug() << "removing multi row: " << r;
+                        ui->tableWidget->removeRow(r);
+                    }
+                } else {
+                    qDebug() << "removing single row: " << range.bottomRow();
+                    ui->tableWidget->removeRow(range.bottomRow());
+                }
+            }
+        }
+    });
+    menu->addSeparator();
+    menu->addAction(deleteRow);
+
     menu->popup(ui->tableWidget->viewport()->mapToGlobal(pos));
+}
+
+void MainWindow::on_verticalHeader_customContextMenuRequested(const QPoint &pos)
+{
+    int row = ui->tableWidget->verticalHeader()->logicalIndexAt(pos);
+
+    qDebug() << "Clicked on row: " << row;
+    QMenu *menu=new QMenu(this);
+    QAction* renameRow = new QAction("Datum eintragen");
+    connect(renameRow, &QAction::triggered, this, [=]() {
+        bool ok;
+        QString rName = QInputDialog::getText(this, tr("QInputDialog::getText()"),
+                                              tr("User name:"), QLineEdit::Normal,
+                                              "", &ok);
+        if(ok && !rName.isEmpty()) {
+            ui->tableWidget->setVerticalHeaderItem(row,new QTableWidgetItem(rName));
+        }
+    });
+    menu->addAction(renameRow);
+    menu->popup(ui->tableWidget->verticalHeader()->viewport()->mapToGlobal(pos));
+}
+
+void MainWindow::on_verticalHeader_doubleClicked(int row)
+{
+    qDebug() << "double clicked on header row: " << row;
+    bool ok;
+    QString rName = QInputDialog::getText(this, tr("Datum eintragen"),
+                                          tr("Datum:"), QLineEdit::Normal,
+                                          "", &ok);
+    if(ok && !rName.isEmpty()) {
+        ui->tableWidget->setVerticalHeaderItem(row,new QTableWidgetItem(rName));
+    }
 }
 
 void MainWindow::on_setCellValue()
@@ -303,32 +438,44 @@ void MainWindow::on_setCellValue()
 
     foreach(QTableWidgetItem* item, items) {
         qDebug() << "received SIGNAL for item: " << item->text() << " at row: " << item->row() << " and column: " << item->column();
-
-        QTableWidgetItem* target = ui->tableWidget->item(0,item->column());
-        if(target == nullptr) {
+        int column = item->column();
+        QTableWidgetItem* target = ui->tableWidget->takeItem(0,item->column());
+        delete target;
+        /*if(target == nullptr) {
             target = new QTableWidgetItem(item->text());
+            target->setData(256,item->data(256));
             item->setTextAlignment(Qt::AlignCenter);
             ui->tableWidget->setItem(0,item->column(),target);
-        } else
+        } else {
             target->setText(item->text());
-        target->setTextAlignment(Qt::AlignCenter);
+
+        }
+        target->setTextAlignment(Qt::AlignCenter);*/
+        ui->tableWidget->takeItem(item->row(),item->column());
+        ui->tableWidget->setItem(0,column,item);
+
     }
 }
 
 void MainWindow::on_tableWidget_cellDoubleClicked(int row, int column)
 {
-    QTableWidgetItem* item = ui->tableWidget->item(row,column);
-    if(item == nullptr)
+    QTableWidgetItem* item = ui->tableWidget->takeItem(row,column);
+    if(item == nullptr) {
+        qDebug() << "cellDoubleClicked: item is null at row: " << row << " and column: " << column;
         return;
-
-    QTableWidgetItem* target = ui->tableWidget->item(0,item->column());
-    if(target == nullptr) {
+    }
+    ui->tableWidget->takeItem(0,column);
+    ui->tableWidget->setItem(0,column,item);
+    //QTableWidgetItem* target = ui->tableWidget->item(0,item->column());
+    /*if(target == nullptr) {
         target = new QTableWidgetItem(item->text());
+        target->setData(256,item->text());
         item->setTextAlignment(Qt::AlignCenter);
         ui->tableWidget->setItem(0,item->column(),target);
     } else
         target->setText(item->text());
-    target->setTextAlignment(Qt::AlignCenter);
+    target->setTextAlignment(Qt::AlignCenter);*/
+
 }
 
 void MainWindow::on_copyRow(int row)
@@ -342,7 +489,7 @@ void MainWindow::on_copyRow(int row)
             //qDebug() << "t is null!";
             items.append("");
         } else {
-            items.append(t->text());
+            items.append(t->data(256).toString());
         }
         if(i< ui->tableWidget->columnCount()-1)
             items.append("\t");
@@ -362,7 +509,7 @@ void MainWindow::on_copySelection()
             items.append("");
             return;
         } else {
-            items.append(item->text());
+            items.append(item->data(256).toString());
         }
         items.append("\t");
     }
@@ -395,7 +542,7 @@ void MainWindow::on_copyRF()
             // skip
             items.append("");
         } else {
-            items.append(item->text());
+            items.append(item->data(256).toString());
         }
         if(i< ui->rfWidget->rowCount()-1)
             items.append("\n");
@@ -405,14 +552,45 @@ void MainWindow::on_copyRF()
     QApplication::clipboard()->setMimeData(mimeData);
 }
 
-void MainWindow::loadRFsIntoTable(QString p, QString v)
+void MainWindow::loadRFsIntoTable(QString p, QString v, QString c)
 {
-    qDebug() << "loadRFsIntoTable: " << p << v;
+    qDebug() << "loadRFsIntoTable: " << p << v << c;
     int row = rfIdxs.value(p,-1);
+    qDebug() << "loadRFsIntoTable: row is " << row;
     if(row>=0) {
         if(ui->rfWidget->item(row,0) == nullptr){
+            qDebug() << "adding new rfWidget item for row: " << row << " parameter: " << p << " and value: " << v;
             QTableWidgetItem *item = new QTableWidgetItem(v);
+            item->setToolTip(c);
+            item->setData(256,v);
+            if(c.length()>0)
+                item->setBackgroundColor(QColor(Qt::GlobalColor::lightGray));
             item->setTextAlignment(Qt::AlignCenter);
+            ui->rfWidget->setItem(row,0,item);
+        }
+    }
+}
+
+void MainWindow::loadRFsIntoTable(LabValue lab)
+{
+    int row = rfIdxs.value(lab.param,-1);
+    if(row>=0) {
+        if(ui->rfWidget->item(row,0) == nullptr){
+            QString value = lab.getValue(ui->comboBox->currentIndex());
+            QString prettyValue = value;
+            if(value != "entfällt" & value != "s.Bem")
+                prettyValue += lab.unit;
+            qDebug() << "adding new rfWidget item for row: " << row << " parameter: " << lab.param << " and value: " << value;
+            QTableWidgetItem *item = new QTableWidgetItem(prettyValue);
+            item->setToolTip(lab.comment);
+            if(lab.comment.length()>0)
+                item->setBackgroundColor(QColor(Qt::GlobalColor::lightGray));
+            if(lab.flag=="+")
+                item->setBackgroundColor(QColor(Qt::GlobalColor::red));
+            else if(lab.flag=="-")
+                item->setBackgroundColor(QColor(Qt::GlobalColor::blue));
+            item->setTextAlignment(Qt::AlignCenter);
+            item->setData(256,value);
             ui->rfWidget->setItem(row,0,item);
         }
     }
@@ -421,7 +599,9 @@ void MainWindow::loadRFsIntoTable(QString p, QString v)
 QString MainWindow::parseValue(QString p, QString v)
 {
     QString output;
-    if(v.contains(QRegExp("[+-]?([0-9]*[.])?[0-9]+")) || v == "folgt") {
+    if(v.contains(QRegExp("[+-]?([0-9]*[.])?[0-9]+")) ||
+            v.contains("folgt") || v.contains("positiv") || v.contains("negativ") ||
+            v.contains("s. Bem") || v.contains("entfällt")) {
         output = v.simplified().remove(" ");
         output = output.remove("<").remove(">").remove("+").remove("N").remove("?");
         if(output.endsWith("-"))
