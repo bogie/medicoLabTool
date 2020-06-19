@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = Followup-labs
+TARGET = COVAS-Labtool3
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -27,14 +27,20 @@ CONFIG += c++11
 SOURCES += \
         labvalue.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        registerview.cpp \
+        urinview.cpp
 
 HEADERS += \
         labvalue.h \
-        mainwindow.h
+        mainwindow.h \
+        registerview.h \
+        urinview.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+        registerview.ui \
+        urinview.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

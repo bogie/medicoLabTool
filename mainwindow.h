@@ -12,6 +12,8 @@
 #include <QLineEdit>
 
 #include "labvalue.h"
+#include "urinview.h"
+#include "registerview.h"
 
 namespace Ui {
 class MainWindow;
@@ -39,7 +41,6 @@ private slots:
     void on_verticalHeader_doubleClicked(int row);
 
     void on_setCellValue();
-
     void on_copyRF();
     void on_copyRow(int row);
     void on_copySelection();
@@ -48,10 +49,16 @@ private slots:
 
     void on_rfWidget_customContextMenuRequested(const QPoint &pos);
 
+    void on_actionUrindiagnostik_triggered();
+
+    void on_actionRegister_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMap<QString, int> indexes;
     QMap<QString, int> rfIdxs;
+    UrinView *uView;
+    RegisterView *rView;
 
     QString parseValue(QString p, QString v);
     void loadRFsIntoTable(QString p, QString v, QString c);

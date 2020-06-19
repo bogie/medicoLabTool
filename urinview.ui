@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>UrinView</class>
+ <widget class="QMainWindow" name="UrinView">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Urinanalyse</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QTextEdit" name="rawLab"/>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="loadUrine">
+         <property name="text">
+          <string>Labor laden</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="clearPatient">
+         <property name="text">
+          <string>Neuer Patient</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="delimiterCombo">
+         <item>
+          <property name="text">
+           <string>Komma</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Punkt</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QTableWidget" name="urineTable">
+       <property name="contextMenuPolicy">
+        <enum>Qt::CustomContextMenu</enum>
+       </property>
+       <column>
+        <property name="text">
+         <string>Spez. Gewicht</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>pH</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Leukozyten</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Erythrozyten</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Bilirubin</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Urobilinogen</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Protein (qual)</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Ketonkörper</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Nitrit</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Glukose</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Erythrozyten (Sediment)</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Leukozyten (Sediment)</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Plattenepithelzellen</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Rundepithelzellen</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>hyal Zylinder</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Path Zylinder</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Leitfähigkeit</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Bakterien</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Kristalle</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Hefen mikr</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

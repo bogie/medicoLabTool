@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RegisterView</class>
+ <widget class="QMainWindow" name="RegisterView">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Register</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QTextEdit" name="rawLab">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="rfWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>500</width>
+            <height>500</height>
+           </size>
+          </property>
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <row>
+           <property name="text">
+            <string>HbA1C</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>LDL</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Triglyceride</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Cholesterin</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>TSH</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>fT3</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>fT4</string>
+           </property>
+          </row>
+          <column>
+           <property name="text">
+            <string>Wert</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="loadRegister">
+          <property name="text">
+           <string>Labor laden</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="clearPatient">
+          <property name="text">
+           <string>Neuer Patient</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="delimiterCombo">
+          <item>
+           <property name="text">
+            <string>Komma</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Punkt</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QTableWidget" name="registerTable">
+        <property name="contextMenuPolicy">
+         <enum>Qt::CustomContextMenu</enum>
+        </property>
+        <column>
+         <property name="text">
+          <string>Leukozyten</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Haemoglobin</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Thrombozyten</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Lymphozyten</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Eosinophile</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>INR</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>aPTT</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>D-Dimere</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>TZ</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Natrium</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Kalium</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Albumin</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Bilirubin(ges)</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Bilirubin(dir)</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>AST</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>ALT</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>gGT</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>AP</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>LDH</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>CK</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>CK-MB</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>TroponinT</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>NTproBNP</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Harnstoff</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Kreatinin</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>CRP</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Procalcitonin</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Ferritin</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>pH</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>pCO2</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Standardbicarbonat</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Standard-Base-Excess</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>pO2</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>SatO2</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>MetHb</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>CO-Hb</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Myoglobin</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>sIL-2R</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>IL-6</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>TNFalpha</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>B Lymphozyten CD19+ abs</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>B Lymphozyten CD19+ rel</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>T Lymphozyten CD3+ abs</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>T Lymphozyten CD3+ rel</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>T Helfer CD3+CD4+ abs</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>T Helfer CD3+CD4+ rel</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>T Suppr CD3+CD8+ abs</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>T Suppr CD3+CD8+ rel</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Quot CD3 CD4/CD3 CD8</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>NK Zel CD16+56+ abs</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>NK Zel CD16+56+ rel</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Albumin(U)</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Kreatinin(U)</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>ACE</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>cLac</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Glukose</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

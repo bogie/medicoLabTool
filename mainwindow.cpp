@@ -6,6 +6,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->showMaximized();
+
+    uView = new UrinView();
+    rView = new RegisterView();
+
     QHeaderView* header = ui->tableWidget->verticalHeader();
     header->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(header, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on_verticalHeader_customContextMenuRequested(QPoint)));
@@ -328,7 +333,6 @@ void MainWindow::on_clearButton_clicked()
 
 void MainWindow::on_tableWidget_customContextMenuRequested(const QPoint &pos)
 {
-
     QTableWidgetItem* item = ui->tableWidget->itemAt(pos);
     if(ui->tableWidget->rowCount()==0) {
         return;
@@ -624,4 +628,14 @@ QString MainWindow::parseValue(QString p, QString v)
     } else
         output = "";
     return output;
+}
+
+void MainWindow::on_actionUrindiagnostik_triggered()
+{
+    uView->showMaximized();
+}
+
+void MainWindow::on_actionRegister_triggered()
+{
+    rView->showMaximized();
 }
