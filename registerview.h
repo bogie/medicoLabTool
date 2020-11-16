@@ -33,16 +33,20 @@ private slots:
     void on_setCellValue();
     void on_copyRF();
     void on_copyRow(int row);
+    void on_copyUrineRow(int row);
     void on_copySelection();
     void on_registerTable_cellDoubleClicked(int row, int column);
 
     void on_clearPatient_clicked();
+
+    void on_urineTable_customContextMenuRequested(const QPoint &pos);
 
 private:
     Ui::RegisterView *ui;
 
     QMap<QString, int> indexes;
     QMap<QString, int> rfIdxs;
+    QMap<QString, int> urineIndexes;
 };
 
 #endif // REGISTERVIEW_H

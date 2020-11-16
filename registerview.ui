@@ -67,12 +67,22 @@
           </row>
           <row>
            <property name="text">
+            <string>HDL</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
             <string>Triglyceride</string>
            </property>
           </row>
           <row>
            <property name="text">
             <string>Cholesterin</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Lp(a)</string>
            </property>
           </row>
           <row>
@@ -88,6 +98,31 @@
           <row>
            <property name="text">
             <string>fT4</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>25-OH-VitD3</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>1,25-OH-VitD3</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Eisen</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Transferrin</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Transferrinsättigung</string>
            </property>
           </row>
           <column>
@@ -173,6 +208,16 @@
         </column>
         <column>
          <property name="text">
+          <string>ATIII</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Fibrinogen</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
           <string>D-Dimere</string>
          </property>
         </column>
@@ -189,6 +234,11 @@
         <column>
          <property name="text">
           <string>Kalium</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Phosphat</string>
          </property>
         </column>
         <column>
@@ -318,7 +368,27 @@
         </column>
         <column>
          <property name="text">
+          <string>cLac</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>CystatinC</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
           <string>Myoglobin</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Copeptin</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Aldosteorn</string>
          </property>
         </column>
         <column>
@@ -408,12 +478,114 @@
         </column>
         <column>
          <property name="text">
-          <string>cLac</string>
+          <string>Glukose</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTableWidget" name="urineTable">
+        <property name="contextMenuPolicy">
+         <enum>Qt::CustomContextMenu</enum>
+        </property>
+        <column>
+         <property name="text">
+          <string>Spez. Gewicht</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>pH</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Leukozyten</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Erythrozyten</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Bilirubin</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Urobilinogen</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Protein (qual.)</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Ketonkörper</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Nitrit</string>
          </property>
         </column>
         <column>
          <property name="text">
           <string>Glukose</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Erythrozyten (Sediment)</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Leukozyten (Sediment)</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Plattenepithelzellen</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Rundepithelzellen</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>hyaline Zylinder</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>pathologische Zylinder</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Leitfähigkeit</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Bakterien</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Kristalle</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Hefen mikr</string>
          </property>
         </column>
        </widget>

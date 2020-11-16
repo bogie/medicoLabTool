@@ -19,7 +19,18 @@ LabValue::LabValue(QString line, bool multi)
         this->comment = split[8]; // Comment in single view
 
         this->value = this->value.simplified().remove(" ");
-        this->value = this->value.remove("<").remove(">").remove("+").remove("N").remove("?");
+        this->value = this->value.remove("<").remove(">").remove("N").remove("?");
+        QList<QString> urineParams;
+        urineParams.append("9LEUU");
+        urineParams << "9HBU" << "9BILU" << "9UROU" << "9TPU" << "9KETU" << "9NITU" << "9GLUU";
+        if(this->value != "+" && !urineParams.contains(this->param))
+            this->value = this->value.remove("+");
+
+        if(urineParams.contains(this->param)) {
+            int level = this->value.count("+");
+            if(level>0)
+                this->value = QString::number(level);
+        }
         if(this->value.endsWith("-"))
             this->value = this->value.remove("-");
         qDebug() << "p: " << this->param << "output: " << this->value;
@@ -39,7 +50,7 @@ LabValue::LabValue(QString line, bool multi)
 
 QString LabValue::getValue(int delim) {
     QString output = this->value;
-    if(output=="s.Bem")
+    if(output=="s.Bem" || output == "Mat.fehlt" || output == "s.u.")
         return output;
     if(delim== 0){
         output = output.replace(".",",");

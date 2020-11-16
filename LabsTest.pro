@@ -29,18 +29,21 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         registerview.cpp \
-        urinview.cpp
+        urinview.cpp \
+        viewselectordialog.cpp
 
 HEADERS += \
         labvalue.h \
         mainwindow.h \
         registerview.h \
-        urinview.h
+        urinview.h \
+        viewselectordialog.h
 
 FORMS += \
         mainwindow.ui \
         registerview.ui \
-        urinview.ui
+        urinview.ui \
+        viewselectordialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

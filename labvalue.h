@@ -2,7 +2,7 @@
 #define LABVALUE_H
 
 #include <QString>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStringList>
 #include <QDebug>
 

@@ -50,7 +50,7 @@ void UrinView::on_loadUrine_clicked()
     QString data = ui ->rawLab->toPlainText();
     if(data.length() == 0)
         return;
-    QStringList lines = data.split(QRegExp("[\n]"),QString::SkipEmptyParts);
+    QStringList lines = data.split(QRegularExpression("[\n]"),Qt::SkipEmptyParts);
 
     int lastRow = ui->urineTable->rowCount();
     ui->urineTable->insertRow(lastRow);
@@ -74,9 +74,9 @@ void UrinView::on_loadUrine_clicked()
             item->setTextAlignment(Qt::AlignCenter);
             item->setToolTip(lab.comment);
             if(lab.flag=="+")
-                item->setBackgroundColor(QColor(Qt::GlobalColor::red));
+                item->setBackground(QColor(Qt::GlobalColor::red));
             else if(lab.flag=="-")
-                item->setBackgroundColor(QColor(Qt::GlobalColor::blue));
+                item->setBackground(QColor(Qt::GlobalColor::blue));
             ui->urineTable->setItem(lastRow,idx,item);
             itemsAdded = true;
         }
@@ -114,7 +114,7 @@ void UrinView::on_copy_row(int row)
             //qDebug() << "t is null!";
             items.append("");
         } else {
-            items.append(t->data(256).toString());
+            items.append(t->data(256).toString().toUtf8());
         }
         if(i< ui->urineTable->columnCount()-1)
             items.append("\t");

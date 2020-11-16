@@ -6,10 +6,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->showMaximized();
+    //this->showMaximized();
 
     uView = new UrinView();
-    rView = new RegisterView();
+    //rView = new RegisterView();
 
     QHeaderView* header = ui->tableWidget->verticalHeader();
     header->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -65,8 +65,8 @@ MainWindow::MainWindow(QWidget *parent) :
     indexes["AP37"] = 20;
     indexes["LDH37"] = 21;
     indexes["CK37"] = 22;
-    //indexes["CKMB"] = 23;
-    indexes["CKMBMa"] = 23;
+    indexes["CKMB"] = 23;
+    //indexes["CKMBMa"] = 23;
     indexes["TNTHS"] = 24;
     indexes["NTpBNP2"] = 25;
     indexes["HST"] = 26;
@@ -79,7 +79,8 @@ MainWindow::MainWindow(QWidget *parent) :
     indexes["TRAFS"] = 32;
     indexes["FERR"] = 33;
     // Proteinurie
-    indexes["9TPU"] = 34;
+    indexes["9TPU"] = 34; // qualitativ
+    indexes["TPSP"] = 34; // quantitativ
     indexes["DERY"] = 35;
     indexes["KRSP"] = 36;
     indexes["HSKRQ"] = 37;
@@ -155,6 +156,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    this->parentWidget()->show();
     delete ui;
 }
 
@@ -163,7 +165,7 @@ void MainWindow::on_loadLabButton_clicked()
     QString data = ui->textEdit->toPlainText();
     if(data.length()==0)
         return;
-    QStringList strList = data.split(QRegExp("[\n]"),QString::SkipEmptyParts);
+    QStringList strList = data.split(QRegularExpression("[\n]"),Qt::SkipEmptyParts);
     int lastRow = ui->tableWidget->rowCount();
     qDebug() << "rowCount before insert is: " << lastRow;
     ui->tableWidget->insertRow(lastRow);
@@ -179,7 +181,7 @@ void MainWindow::on_loadLabButton_clicked()
         if(idx>=0) {
             QString value = lab.getValue(ui->comboBox->currentIndex());
             QString prettyValue = value;
-            if(value != "entfällt" & value != "s.Bem")
+            if(value != "entfällt" & value != "s.Bem" & value != "folgt")
                 prettyValue += lab.unit;
             QTableWidgetItem* item = new QTableWidgetItem(prettyValue);
             item->setData(256,value);
@@ -190,9 +192,9 @@ void MainWindow::on_loadLabButton_clicked()
                 item->setIcon(icon);
             }*/
             if(lab.flag=="+")
-                item->setBackgroundColor(QColor(Qt::GlobalColor::red));
+                item->setBackground(QColor(Qt::GlobalColor::red));
             else if(lab.flag=="-")
-                item->setBackgroundColor(QColor(Qt::GlobalColor::blue));
+                item->setBackground(QColor(Qt::GlobalColor::blue));
             ui->tableWidget->setItem(lastRow,idx,item);
             itemsAdded = true;
         } else if(rfIdxs.contains(lab.param)) {
@@ -236,7 +238,7 @@ void MainWindow::on_loadMultiButton_clicked()
     QString data = ui->textEdit->toPlainText();
     if(data.length()==0)
         return;
-    QStringList strList = data.split(QRegExp("[\n]"),QString::SkipEmptyParts);
+    QStringList strList = data.split(QRegularExpression("[\n]"),Qt::SkipEmptyParts);
     int labCount = strList.at(0).split("\t").length();
     qDebug() << "multi has: " << labCount-3 << " labs";
     int curRow = ui->tableWidget->rowCount();
@@ -291,7 +293,7 @@ void MainWindow::on_copyLabButton_clicked()
     QByteArray items;
     qDebug() << "onCopy: roWcount is: " << ui->tableWidget->rowCount();
     for(int r = 0; r < ui->tableWidget->rowCount(); r++) {
-        items.append(ui->tableWidget->verticalHeaderItem(r)->text());
+        items.append(ui->tableWidget->verticalHeaderItem(r)->text().toUtf8());
         items.append("\t\t");
 
         for(int c = 0; c < ui->tableWidget->columnCount(); c++) {
@@ -300,7 +302,7 @@ void MainWindow::on_copyLabButton_clicked()
                 //qDebug() << "t is null!";
                 items.append("");
             } else {
-                items.append(t->data(256).toString());
+                items.append(t->data(256).toString().toUtf8());
             }
             if(c < ui->tableWidget->columnCount()-1)
                 items.append("\t");
@@ -493,7 +495,7 @@ void MainWindow::on_copyRow(int row)
             //qDebug() << "t is null!";
             items.append("");
         } else {
-            items.append(t->data(256).toString());
+            items.append(t->data(256).toString().toUtf8());
         }
         if(i< ui->tableWidget->columnCount()-1)
             items.append("\t");
@@ -513,7 +515,7 @@ void MainWindow::on_copySelection()
             items.append("");
             return;
         } else {
-            items.append(item->data(256).toString());
+            items.append(item->data(256).toString().toUtf8());
         }
         items.append("\t");
     }
@@ -546,7 +548,7 @@ void MainWindow::on_copyRF()
             // skip
             items.append("");
         } else {
-            items.append(item->data(256).toString());
+            items.append(item->data(256).toString().toUtf8());
         }
         if(i< ui->rfWidget->rowCount()-1)
             items.append("\n");
@@ -568,7 +570,7 @@ void MainWindow::loadRFsIntoTable(QString p, QString v, QString c)
             item->setToolTip(c);
             item->setData(256,v);
             if(c.length()>0)
-                item->setBackgroundColor(QColor(Qt::GlobalColor::lightGray));
+                item->setBackground(QColor(Qt::GlobalColor::lightGray));
             item->setTextAlignment(Qt::AlignCenter);
             ui->rfWidget->setItem(row,0,item);
         }
@@ -588,11 +590,11 @@ void MainWindow::loadRFsIntoTable(LabValue lab)
             QTableWidgetItem *item = new QTableWidgetItem(prettyValue);
             item->setToolTip(lab.comment);
             if(lab.comment.length()>0)
-                item->setBackgroundColor(QColor(Qt::GlobalColor::lightGray));
+                item->setBackground(QColor(Qt::GlobalColor::lightGray));
             if(lab.flag=="+")
-                item->setBackgroundColor(QColor(Qt::GlobalColor::red));
+                item->setBackground(QColor(Qt::GlobalColor::red));
             else if(lab.flag=="-")
-                item->setBackgroundColor(QColor(Qt::GlobalColor::blue));
+                item->setBackground(QColor(Qt::GlobalColor::blue));
             item->setTextAlignment(Qt::AlignCenter);
             item->setData(256,value);
             ui->rfWidget->setItem(row,0,item);
@@ -603,7 +605,7 @@ void MainWindow::loadRFsIntoTable(LabValue lab)
 QString MainWindow::parseValue(QString p, QString v)
 {
     QString output;
-    if(v.contains(QRegExp("[+-]?([0-9]*[.])?[0-9]+")) ||
+    if(v.contains(QRegularExpression("[+-]?([0-9]*[.])?[0-9]+")) ||
             v.contains("folgt") || v.contains("positiv") || v.contains("negativ") ||
             v.contains("s. Bem") || v.contains("entfällt")) {
         output = v.simplified().remove(" ");
@@ -637,5 +639,5 @@ void MainWindow::on_actionUrindiagnostik_triggered()
 
 void MainWindow::on_actionRegister_triggered()
 {
-    rView->showMaximized();
+    //rView->showMaximized();
 }

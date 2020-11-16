@@ -141,6 +141,9 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionRegister">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Register</string>
    </property>
