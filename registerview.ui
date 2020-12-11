@@ -144,6 +144,20 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="loadCumulative">
+          <property name="text">
+           <string>Kumulativbefund laden</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="copyAllLabs">
+          <property name="text">
+           <string>Alle Labore kopieren</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="clearPatient">
           <property name="text">
            <string>Neuer Patient</string>
@@ -170,6 +184,9 @@
        <widget class="QTableWidget" name="registerTable">
         <property name="contextMenuPolicy">
          <enum>Qt::CustomContextMenu</enum>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::EditKeyPressed</set>
         </property>
         <column>
          <property name="text">

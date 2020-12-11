@@ -8,6 +8,7 @@
 #include <QMimeData>
 #include <QClipboard>
 #include <QDebug>
+#include <QMessageBox>
 
 #include "labvalue.h"
 
@@ -41,12 +42,19 @@ private slots:
 
     void on_urineTable_customContextMenuRequested(const QPoint &pos);
 
+    void on_loadCumulative_clicked();
+
+    void on_copyAllLabs_clicked();
+
+    void on_registerTable_itemSelectionChanged();
+
 private:
     Ui::RegisterView *ui;
 
     QMap<QString, int> indexes;
     QMap<QString, int> rfIdxs;
     QMap<QString, int> urineIndexes;
+    bool merginLabs;
 };
 
 #endif // REGISTERVIEW_H

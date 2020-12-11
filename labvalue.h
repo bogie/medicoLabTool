@@ -9,7 +9,8 @@
 class LabValue
 {
 public:
-    LabValue(QString line, bool multi);
+    LabValue(QString line);
+    LabValue(QString parameter, QString paramName, QString unit, QString refRange, QString value);
     QString getValue(int delim);
     QString param;
     QString paramName;
@@ -21,6 +22,7 @@ public:
     QString unused;
     QString comment;
     bool success;
+    bool isPassthrough;
 };
 
 #endif // LABVALUE_H

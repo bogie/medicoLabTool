@@ -173,7 +173,7 @@ void MainWindow::on_loadLabButton_clicked()
     bool itemsAdded = false;
 
     foreach(QString str, strList) {
-        LabValue lab = LabValue(str,false);
+        LabValue lab = LabValue(str);
         if(lab.success == false)
             continue;
 
@@ -365,7 +365,6 @@ void MainWindow::on_tableWidget_customContextMenuRequested(const QPoint &pos)
         qDebug() << " no item at this position";
     } else {
         menu->addAction(setCellValue);
-
     }
 
     //menu->addAction(editCell);

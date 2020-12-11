@@ -57,7 +57,7 @@ void UrinView::on_loadUrine_clicked()
     bool itemsAdded = false;
 
     foreach(QString line, lines) {
-        LabValue lab = LabValue(line, false);
+        LabValue lab = LabValue(line);
         qDebug() << "parsed lab: " << lab.paramName << " success: " << lab.success;
         if(lab.success == false)
             continue;
