@@ -7,6 +7,7 @@ RegisterView::RegisterView(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    mergingLabs = false;
     indexes["LEUK"] = 0;
     indexes["9HB"] = 1;
     indexes["THRO"] = 2;
@@ -171,6 +172,7 @@ void RegisterView::on_registerTable_customContextMenuRequested(const QPoint &pos
         if(ui->registerTable->selectedRanges().length()>0) {
             QList<QTableWidgetSelectionRange> ranges = ui->registerTable->selectedRanges();
             qDebug() << "got ranges length: " << ranges.length();
+            mergingLabs = true;
             for(int i = ranges.length(); i>0; i--) {
                 QTableWidgetSelectionRange range = ranges.at(i-1);
                 if((range.bottomRow()-range.topRow()) >= 1) {
@@ -183,6 +185,7 @@ void RegisterView::on_registerTable_customContextMenuRequested(const QPoint &pos
                     ui->registerTable->removeRow(range.bottomRow());
                 }
             }
+            mergingLabs = false;
         }
     });
     menu->addSeparator();
@@ -668,7 +671,7 @@ void RegisterView::on_registerTable_itemSelectionChanged()
     if(ranges.length()==0)
         return;
     QTableWidgetSelectionRange range = ranges.at(0);
-    if(range.rowCount()>1 && !merginLabs) {
+    if(range.rowCount()>1 && !mergingLabs) {
         qDebug() << "Allow merge!";
         QMessageBox box;
         box.setText("Sollen die ausgewählten Zeilen kombiniert werden?");
@@ -680,7 +683,7 @@ void RegisterView::on_registerTable_itemSelectionChanged()
         failureCodes << "s. Bem" << "entfällt" << "Mat. fehlt" << "folgt";
 
         if(ret == QMessageBox::Yes) {
-            merginLabs = true;
+            mergingLabs = true;
             for(int c = 0; c < ui->registerTable->columnCount(); c++) {
                 for(int r = range.topRow()+1; r <= range.bottomRow(); r++) {
                     qDebug() << "merging at row: " << r;
@@ -690,7 +693,7 @@ void RegisterView::on_registerTable_itemSelectionChanged()
                     if(topItem == nullptr || failureCodes.contains(topItem->data(256).toString())) {
                         if(bottomItem != nullptr) {
                             qDebug() << " bottomItem has text: " << bottomItem->text();
-                            //bottomItem = ui->registerTable->takeItem(r,c);
+                            bottomItem = ui->registerTable->takeItem(r,c);
                             ui->registerTable->setItem(range.topRow(),c,bottomItem);
                             qDebug() << "new position: " << range.topRow() << " column: " << c;
                         }
@@ -699,7 +702,7 @@ void RegisterView::on_registerTable_itemSelectionChanged()
             }
             for(int i = range.bottomRow(); i >= range.topRow()+1; i--)
                 ui->registerTable->removeRow(i);
-            merginLabs = false;
+            mergingLabs = false;
         }
     }
 }

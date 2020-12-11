@@ -54,7 +54,7 @@ private:
     QMap<QString, int> indexes;
     QMap<QString, int> rfIdxs;
     QMap<QString, int> urineIndexes;
-    bool merginLabs;
+    bool mergingLabs;
 };
 
 #endif // REGISTERVIEW_H
