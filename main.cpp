@@ -1,4 +1,5 @@
 #include "viewselectordialog.h"
+#include "mainwindow.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
@@ -7,8 +8,11 @@ int main(int argc, char *argv[])
     //MainWindow w;
     //w.show();
 
-    ViewSelectorDialog d;
-    d.show();
+    //ViewSelectorDialog d;
+    //d.show();
+
+    MainWindow main;
+    main.show();
 
     return a.exec();
 }

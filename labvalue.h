@@ -12,6 +12,7 @@ public:
     LabValue(QString line);
     LabValue(QString parameter, QString paramName, QString unit, QString refRange, QString value);
     QString getValue(int delim);
+    QString getValue();
     QString param;
     QString paramName;
     QString value;

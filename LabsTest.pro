@@ -25,6 +25,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        followupview.cpp \
+        labprofiledialog.cpp \
         labvalue.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -33,6 +35,8 @@ SOURCES += \
         viewselectordialog.cpp
 
 HEADERS += \
+        followupview.h \
+        labprofiledialog.h \
         labvalue.h \
         mainwindow.h \
         registerview.h \
@@ -40,6 +44,8 @@ HEADERS += \
         viewselectordialog.h
 
 FORMS += \
+        followupview.ui \
+        labprofiledialog.ui \
         mainwindow.ui \
         registerview.ui \
         urinview.ui \

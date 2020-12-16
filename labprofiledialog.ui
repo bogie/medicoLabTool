@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LabProfileDialog</class>
+ <widget class="QDialog" name="LabProfileDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>650</y>
+     <width>341</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="profileListWidget">
+   <property name="geometry">
+    <rect>
+     <x>990</x>
+     <y>40</y>
+     <width>181</width>
+     <height>361</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTreeWidget" name="treeWidget">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>170</y>
+     <width>256</width>
+     <height>192</height>
+    </rect>
+   </property>
+   <property name="acceptDrops">
+    <bool>true</bool>
+   </property>
+   <property name="dragEnabled">
+    <bool>true</bool>
+   </property>
+   <property name="dragDropMode">
+    <enum>QAbstractItemView::InternalMove</enum>
+   </property>
+   <column>
+    <property name="text">
+     <string>Laborwert</string>
+    </property>
+   </column>
+   <item>
+    <property name="text">
+     <string>Glucose</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>GLU</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>POCT_GLU</string>
+     </property>
+    </item>
+   </item>
+   <item>
+    <property name="text">
+     <string>Leukozyten</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>9LEU</string>
+     </property>
+    </item>
+   </item>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>LabProfileDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>LabProfileDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

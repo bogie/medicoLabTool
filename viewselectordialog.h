@@ -2,7 +2,7 @@
 #define VIEWSELECTORDIALOG_H
 
 #include <QDialog>
-#include "mainwindow.h"
+#include "followupview.h"
 #include "registerview.h"
 
 namespace Ui {
@@ -15,7 +15,7 @@ class ViewSelectorDialog : public QDialog
 
 public:
     explicit ViewSelectorDialog(QWidget *parent = nullptr);
-    MainWindow* w;
+    FollowupView* w;
     RegisterView* r;
     ~ViewSelectorDialog();
 

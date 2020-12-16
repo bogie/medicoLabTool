@@ -121,3 +121,7 @@ QString LabValue::getValue(int delim) {
     }
     return output;
 }
+
+QString LabValue::getValue() {
+    return this->value;
+}

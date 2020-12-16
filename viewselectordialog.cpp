@@ -6,7 +6,7 @@ ViewSelectorDialog::ViewSelectorDialog(QWidget *parent) :
     ui(new Ui::ViewSelectorDialog)
 {
     ui->setupUi(this);
-    w = new MainWindow(this);
+    w = new FollowupView(this);
 
     //w->hide();
     r = new RegisterView(this);

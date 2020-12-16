@@ -112,11 +112,13 @@ RegisterView::RegisterView(QWidget *parent) :
     urineIndexes["9BAKTUF"] = 17;
     urineIndexes["KRSTUF"] = 18;
     urineIndexes["UHEFE"] = 19;
+
+    ui->registerTable->installEventFilter(this);
+    connect(ui->registerTable,SIGNAL(keyPressEvent(QKeyEvent*)),this,SLOT(onKeyPressEvent(QKeyEvent*)));
 }
 
 RegisterView::~RegisterView()
 {
-    this->parentWidget()->show();
     delete ui;
 }
 
@@ -167,6 +169,52 @@ void RegisterView::on_registerTable_customContextMenuRequested(const QPoint &pos
         menu->addAction(copySelection);
     }
 
+    if(ui->registerTable->selectedRanges().at(0).rowCount()>1) {
+        QAction *mergeRow = new QAction("Zeilen kombinieren");
+        connect(mergeRow, &QAction::triggered, this, [=]() {
+            QList<QTableWidgetSelectionRange> ranges = ui->registerTable->selectedRanges();
+            if(ranges.length()==0)
+                return;
+            QTableWidgetSelectionRange range = ranges.at(0);
+            if(range.rowCount()>1 && !mergingLabs) {
+                qDebug() << "Allow merge!";
+                QMessageBox box;
+                box.setText("Sollen die ausgewählten Zeilen kombiniert werden?");
+                box.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+                box.setDefaultButton(QMessageBox::No);
+                int ret = box.exec();
+
+                QList<QString> failureCodes;
+                failureCodes << "s. Bem" << "entfällt" << "Mat. fehlt" << "folgt";
+
+                if(ret == QMessageBox::Yes) {
+                    mergingLabs = true;
+                    for(int c = 0; c < ui->registerTable->columnCount(); c++) {
+                        for(int r = range.topRow()+1; r <= range.bottomRow(); r++) {
+                            qDebug() << "merging at row: " << r;
+                            QTableWidgetItem* topItem = ui->registerTable->item(range.topRow(),c);
+                            QTableWidgetItem* bottomItem = ui->registerTable->item(r,c);
+
+                            if(topItem == nullptr || failureCodes.contains(topItem->data(256).toString())) {
+                                if(bottomItem != nullptr) {
+                                    qDebug() << " bottomItem has text: " << bottomItem->text();
+                                    bottomItem = ui->registerTable->takeItem(r,c);
+                                    ui->registerTable->setItem(range.topRow(),c,bottomItem);
+                                    qDebug() << "new position: " << range.topRow() << " column: " << c;
+                                }
+                            }
+                        }
+                    }
+                    for(int i = range.bottomRow(); i >= range.topRow()+1; i--)
+                        ui->registerTable->removeRow(i);
+                    mergingLabs = false;
+                }
+            }
+        });
+        menu->addSeparator();
+        menu->addAction(mergeRow);
+    }
+
     QAction *deleteRow = new QAction("Ganze Zeile löschen");
     connect(deleteRow, &QAction::triggered, this, [=]() {
         if(ui->registerTable->selectedRanges().length()>0) {
@@ -210,10 +258,8 @@ void RegisterView::on_urineTable_customContextMenuRequested(const QPoint &pos)
         qDebug() << " no item at this position";
     }
 
-    //menu->addAction(editCell);
     menu->addSeparator();
     menu->addAction(copyRow);
-
 
     QAction *deleteRow = new QAction("Ganze Zeile löschen");
     connect(deleteRow, &QAction::triggered, this, [=]() {
@@ -274,7 +320,7 @@ void RegisterView::on_loadCumulative_clicked()
                     // add to rfTable
                     int row = rfIdxs.value(lab.param,-1);
                     if(ui->rfWidget->item(row,0) == nullptr){
-                        QString value = lab.getValue(ui->delimiterCombo->currentIndex());
+                        QString value = lab.getValue();
                         QString prettyValue = value;
                         if(!lab.isPassthrough)
                             prettyValue += lab.unit;
@@ -294,7 +340,7 @@ void RegisterView::on_loadCumulative_clicked()
                 }
                 if(lIdx>=0) {
                     qDebug() << "adding parameter " << p << " to laboratory table at idx: " << lIdx;
-                    QString value = lab.getValue(ui->delimiterCombo->currentIndex());
+                    QString value = lab.getValue();
                     QString prettyValue = value;
                     if(!lab.isPassthrough)
                         prettyValue += lab.unit;
@@ -302,10 +348,6 @@ void RegisterView::on_loadCumulative_clicked()
                     item->setData(256,value);
                     item->setTextAlignment(Qt::AlignCenter);
                     item->setToolTip(lab.comment);
-                    /*if(lab.comment.length()>0) {
-                        QIcon icon = QIcon(":/icons/warning.jpg");
-                        item->setIcon(icon);
-                    }*/
                     if(lab.flag=="+")
                         item->setBackground(QColor(Qt::GlobalColor::red));
                     else if(lab.flag=="-")
@@ -315,7 +357,7 @@ void RegisterView::on_loadCumulative_clicked()
 
                 if(uIdx>=0) {
                     qDebug() << "adding parameter " << p << " to urine table at idx: " << lIdx;
-                    QString value = lab.getValue(ui->delimiterCombo->currentIndex());
+                    QString value = lab.getValue();
                     QString prettyValue = value;
                     if(!lab.isPassthrough)
                         prettyValue += lab.unit;
@@ -323,10 +365,6 @@ void RegisterView::on_loadCumulative_clicked()
                     item->setData(256,value);
                     item->setTextAlignment(Qt::AlignCenter);
                     item->setToolTip(lab.comment);
-                    /*if(lab.comment.length()>0) {
-                        QIcon icon = QIcon(":/icons/warning.jpg");
-                        item->setIcon(icon);
-                    }*/
                     if(lab.flag=="+")
                         item->setBackground(QColor(Qt::GlobalColor::red));
                     else if(lab.flag=="-")
@@ -401,7 +439,7 @@ void RegisterView::on_loadRegister_clicked()
         int idx = indexes.value(lab.param,-1);
         if(idx>=0) {
             qDebug() << "Adding " << lab.param << " at index: " << idx;
-            QString value = lab.getValue(ui->delimiterCombo->currentIndex());
+            QString value = lab.getValue();
             QString prettyValue = value;
             if(!lab.isPassthrough)
                 prettyValue += lab.unit;
@@ -409,10 +447,6 @@ void RegisterView::on_loadRegister_clicked()
             item->setData(256,value);
             item->setTextAlignment(Qt::AlignCenter);
             item->setToolTip(lab.comment);
-            /*if(lab.comment.length()>0) {
-                QIcon icon = QIcon(":/icons/warning.jpg");
-                item->setIcon(icon);
-            }*/
             if(lab.flag=="+")
                 item->setBackground(QColor(Qt::GlobalColor::red));
             else if(lab.flag=="-")
@@ -422,7 +456,7 @@ void RegisterView::on_loadRegister_clicked()
         } else if(rfIdxs.contains(lab.param)) {
             int row = rfIdxs.value(lab.param,-1);
             if(ui->rfWidget->item(row,0) == nullptr){
-                QString value = lab.getValue(ui->delimiterCombo->currentIndex());
+                QString value = lab.getValue();
                 QString prettyValue = value;
                 if(!lab.isPassthrough)
                     prettyValue += lab.unit;
@@ -444,7 +478,7 @@ void RegisterView::on_loadRegister_clicked()
             int uIdx = urineIndexes.value(lab.param,-1);
             if(uIdx>=0) {
                 qDebug() << "Adding " << lab.param << " at index: " << uIdx;
-                QString value = lab.getValue(ui->delimiterCombo->currentIndex());
+                QString value = lab.getValue();
                 QString prettyValue = value;
                 if(!lab.isPassthrough)
                     prettyValue += lab.unit;
@@ -452,10 +486,6 @@ void RegisterView::on_loadRegister_clicked()
                 item->setData(256,value);
                 item->setTextAlignment(Qt::AlignCenter);
                 item->setToolTip(lab.comment);
-                /*if(lab.comment.length()>0) {
-                    QIcon icon = QIcon(":/icons/warning.jpg");
-                    item->setIcon(icon);
-                }*/
                 if(lab.flag=="+")
                     item->setBackground(QColor(Qt::GlobalColor::red));
                 else if(lab.flag=="-")
@@ -484,6 +514,19 @@ void RegisterView::on_loadRegister_clicked()
     ui->rawLab->clear();
 }
 
+QByteArray RegisterView::localizeString(QString input) {
+    QByteArray output;
+    if(input =="s. Bem" || input == "Mat. fehlt" || input == "s.u.")
+        output = input.toUtf8();
+    if(ui->delimiterCombo->currentIndex()== 0){
+        output = input.replace(".",",").toUtf8();
+    } else {
+        output = input.replace(",",".").toUtf8();
+    }
+    return output;
+}
+
+
 void RegisterView::on_copyRF()
 {
     QByteArray items;
@@ -493,7 +536,7 @@ void RegisterView::on_copyRF()
             // skip
             items.append("");
         } else {
-            items.append(item->data(256).toString().toUtf8());
+            items.append(localizeString(item->data(256).toString()));
         }
         if(i< ui->rfWidget->rowCount()-1)
             items.append("\n");
@@ -534,15 +577,13 @@ void RegisterView::on_setCellValue()
 void RegisterView::on_copyRow(int row)
 {
     QByteArray items;
-    //QTableWidgetItem* item = ui->tableWidget->selectedItems().at(0);
     for(int i = 0; i< ui->registerTable->columnCount(); i++) {
 
-        QTableWidgetItem* t = ui->registerTable->item(row,i);
-        if(t == nullptr) {
-            //qDebug() << "t is null!";
+        QTableWidgetItem* item = ui->registerTable->item(row,i);
+        if(item == nullptr) {
             items.append("");
         } else {
-            items.append(t->data(256).toString().toUtf8());
+            items.append(localizeString(item->data(256).toString()));
         }
         if(i< ui->registerTable->columnCount()-1)
             items.append("\t");
@@ -557,12 +598,11 @@ void RegisterView::on_copyUrineRow(int row)
     QByteArray items;
     for(int i = 0; i< ui->urineTable->columnCount(); i++) {
 
-        QTableWidgetItem* t = ui->urineTable->item(row,i);
-        if(t == nullptr) {
-            //qDebug() << "t is null!";
+        QTableWidgetItem* item = ui->urineTable->item(row,i);
+        if(item == nullptr) {
             items.append("");
         } else {
-            items.append(t->data(256).toString().toUtf8());
+            items.append(localizeString(item->data(256).toString()));
         }
         if(i< ui->urineTable->columnCount()-1)
             items.append("\t");
@@ -575,7 +615,6 @@ void RegisterView::on_copyUrineRow(int row)
 void RegisterView::on_copySelection()
 {
     QByteArray items;
-    QList<QTableWidgetItem*> selected = ui->registerTable->selectedItems();
     QList<QTableWidgetSelectionRange> ranges = ui->registerTable->selectedRanges();
 
     if(ranges.length()>1) {
@@ -591,7 +630,7 @@ void RegisterView::on_copySelection()
             if(!item) {
                 items.append("");
             } else {
-                items.append(item->data(256).toString().toUtf8());
+                items.append(localizeString(item->data(256).toString()));
             }
             if(j+1<range.columnCount())
                 items.append("\t");
@@ -646,12 +685,11 @@ void RegisterView::on_copyAllLabs_clicked()
         }
 
         for(int c = 0; c < ui->registerTable->columnCount(); c++) {
-            QTableWidgetItem* t = ui->registerTable->item(r,c);
-            if(t == nullptr) {
-                //qDebug() << "t is null!";
+            QTableWidgetItem* item = ui->registerTable->item(r,c);
+            if(item == nullptr) {
                 items.append("");
             } else {
-                items.append(t->data(256).toString().toUtf8());
+                items.append(localizeString(item->data(256).toString()));
             }
             if(c < ui->registerTable->columnCount()-1)
                 items.append("\t");
@@ -667,7 +705,7 @@ void RegisterView::on_copyAllLabs_clicked()
 void RegisterView::on_registerTable_itemSelectionChanged()
 {
     qDebug() << "Item selection has changed";
-    QList<QTableWidgetSelectionRange> ranges = ui->registerTable->selectedRanges();
+ /*   QList<QTableWidgetSelectionRange> ranges = ui->registerTable->selectedRanges();
     if(ranges.length()==0)
         return;
     QTableWidgetSelectionRange range = ranges.at(0);
@@ -704,5 +742,9 @@ void RegisterView::on_registerTable_itemSelectionChanged()
                 ui->registerTable->removeRow(i);
             mergingLabs = false;
         }
-    }
+    }*/
+}
+
+void RegisterView::onKeyPressEvent(QKeyEvent* event) {
+    qDebug() << "received key press event: " << event->text();
 }

@@ -6,155 +6,65 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
-    <height>720</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>COVAS - Followup</string>
+   <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QPushButton" name="loadLabButton">
-          <property name="text">
-           <string>Einzelbefund laden 🗁</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="loadMultiButton">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Kumulativbefund laden</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="comboBox"/>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QTextEdit" name="textEdit"/>
-        </item>
-        <item>
-         <widget class="QTableWidget" name="rfWidget">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>500</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="contextMenuPolicy">
-           <enum>Qt::CustomContextMenu</enum>
-          </property>
-          <column>
-           <property name="text">
-            <string>Wert</string>
-           </property>
-          </column>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QPushButton" name="clearButton">
-          <property name="text">
-           <string>Nächster Patient🗑</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="copyLabButton">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Alle Labore kopieren</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QTableWidget" name="tableWidget">
-        <property name="contextMenuPolicy">
-         <enum>Qt::CustomContextMenu</enum>
-        </property>
-        <property name="editTriggers">
-         <set>QAbstractItemView::EditKeyPressed</set>
-        </property>
-        <property name="dragEnabled">
-         <bool>false</bool>
-        </property>
-        <property name="dragDropMode">
-         <enum>QAbstractItemView::InternalMove</enum>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-   </layout>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>220</y>
+      <width>261</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="registerViewButton">
+       <property name="text">
+        <string>Register</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="followupViewButton">
+       <property name="text">
+        <string>Followup</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
-  <widget class="QMenuBar" name="menuBar">
+  <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1280</width>
+     <width>800</width>
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuAnsicht">
+   <widget class="QMenu" name="menuEinstellungen">
     <property name="title">
-     <string>Ansicht</string>
+     <string>Einstellungen</string>
     </property>
-    <addaction name="actionRegister"/>
-    <addaction name="actionUrindiagnostik"/>
+    <addaction name="actionProfile"/>
    </widget>
-   <addaction name="menuAnsicht"/>
+   <addaction name="menuEinstellungen"/>
   </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionRegister">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionProfile">
    <property name="text">
-    <string>Register</string>
-   </property>
-  </action>
-  <action name="actionUrindiagnostik">
-   <property name="text">
-    <string>Urindiagnostik</string>
+    <string>Profile</string>
    </property>
   </action>
  </widget>
- <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
 </ui>
