@@ -29,64 +29,85 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QListWidget" name="profileListWidget">
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>30</y>
+     <width>771</width>
+     <height>601</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="profileLabel">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTreeWidget" name="labTreeWidget">
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
+      <property name="acceptDrops">
+       <bool>true</bool>
+      </property>
+      <property name="dragEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="dragDropMode">
+       <enum>QAbstractItemView::InternalMove</enum>
+      </property>
+      <column>
+       <property name="text">
+        <string>Laborwert</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLineEdit" name="labparamInput">
+        <property name="placeholderText">
+         <string>Neuen Laborwert hinzufügen</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="addLabparamButton">
+        <property name="text">
+         <string>Hinzufügen</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget_2">
    <property name="geometry">
     <rect>
      <x>990</x>
-     <y>40</y>
-     <width>181</width>
-     <height>361</height>
+     <y>30</y>
+     <width>131</width>
+     <height>591</height>
     </rect>
    </property>
-  </widget>
-  <widget class="QTreeWidget" name="treeWidget">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>170</y>
-     <width>256</width>
-     <height>192</height>
-    </rect>
-   </property>
-   <property name="acceptDrops">
-    <bool>true</bool>
-   </property>
-   <property name="dragEnabled">
-    <bool>true</bool>
-   </property>
-   <property name="dragDropMode">
-    <enum>QAbstractItemView::InternalMove</enum>
-   </property>
-   <column>
-    <property name="text">
-     <string>Laborwert</string>
-    </property>
-   </column>
-   <item>
-    <property name="text">
-     <string>Glucose</string>
-    </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <property name="text">
-      <string>GLU</string>
-     </property>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Laborprofile</string>
+      </property>
+     </widget>
     </item>
     <item>
-     <property name="text">
-      <string>POCT_GLU</string>
-     </property>
+     <widget class="QListWidget" name="profileListWidget"/>
     </item>
-   </item>
-   <item>
-    <property name="text">
-     <string>Leukozyten</string>
-    </property>
-    <item>
-     <property name="text">
-      <string>9LEU</string>
-     </property>
-    </item>
-   </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
