@@ -516,12 +516,15 @@ void RegisterView::on_loadRegister_clicked()
 
 QByteArray RegisterView::localizeString(QString input) {
     QByteArray output;
-    if(input =="s. Bem" || input == "Mat. fehlt" || input == "s.u.")
+    QRegularExpression re("^\\d");
+    if(!re.match(input).hasMatch())
         output = input.toUtf8();
-    if(ui->delimiterCombo->currentIndex()== 0){
-        output = input.replace(".",",").toUtf8();
-    } else {
-        output = input.replace(",",".").toUtf8();
+    else {
+        if(ui->delimiterCombo->currentIndex()== 0){
+            output = input.replace(".",",").toUtf8();
+        } else {
+            output = input.replace(",",".").toUtf8();
+        }
     }
     return output;
 }
