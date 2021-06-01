@@ -10,6 +10,7 @@
 #include <QAction>
 #include <QMenu>
 #include <QInputDialog>
+#include <QKeyEvent>
 
 namespace Ui {
 class LabProfileDialog;
@@ -24,22 +25,30 @@ public:
     ~LabProfileDialog();
 
 private slots:
-    void on_buttonBox_accepted();
-
     void on_profileListWidget_itemDoubleClicked(QListWidgetItem *item);
 
     void on_addLabparamButton_clicked();
 
     void on_labTreeWidget_customContextMenuRequested(const QPoint &pos);
 
+    void on_profileListWidget_customContextMenuRequested(const QPoint &pos);
+
+    void on_labparamInput_returnPressed();
+
+    void on_okButton_clicked();
+
+    void on_cancelButton_clicked();
+
 private:
     Ui::LabProfileDialog *ui;
     QMap<QString, QSettings*> *profiles;
     QString selectedProfile;
 
+
     void loadProfiles();
     void saveProfile();
     void selectLabProfile(QString profileName);
+    bool createProfileFile(QString profileName);
 };
 
 #endif // LABPROFILEDIALOG_H

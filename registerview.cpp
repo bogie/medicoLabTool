@@ -14,7 +14,7 @@ RegisterView::RegisterView(QWidget *parent) :
     indexes["LYMR"] = 3;
     indexes["LYMM"] = 3;
     indexes["EOSR"] = 4;
-    indexes["EOSM"] =4;
+    indexes["EOSM"] = 4;
     indexes["INR"] = 5;
     indexes["PTT"] = 6;
     indexes["AT3"] = 7;

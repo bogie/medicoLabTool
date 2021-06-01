@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "registerview.h"
 #include "followupview.h"
+#include "profileview.h"
 #include "labprofiledialog.h"
 
 namespace Ui {
@@ -25,10 +26,15 @@ private slots:
 
     void on_actionProfile_triggered();
 
+    void on_openProfileButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     RegisterView *rView;
     FollowupView *fView;
+
+    void loadProfiles();
+    QMap<QString, QSettings*> *profiles;
 };
 
 #endif // MAINWINDOW_H

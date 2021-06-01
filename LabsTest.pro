@@ -30,6 +30,7 @@ SOURCES += \
         labvalue.cpp \
         main.cpp \
         mainwindow.cpp \
+        profileview.cpp \
         registerview.cpp \
         urinview.cpp \
         viewselectordialog.cpp
@@ -39,6 +40,7 @@ HEADERS += \
         labprofiledialog.h \
         labvalue.h \
         mainwindow.h \
+        profileview.h \
         registerview.h \
         urinview.h \
         viewselectordialog.h
@@ -47,6 +49,7 @@ FORMS += \
         followupview.ui \
         labprofiledialog.ui \
         mainwindow.ui \
+        profileview.ui \
         registerview.ui \
         urinview.ui \
         viewselectordialog.ui
