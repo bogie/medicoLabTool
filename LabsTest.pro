@@ -30,8 +30,11 @@ SOURCES += \
         labvalue.cpp \
         main.cpp \
         mainwindow.cpp \
+        paramdialog.cpp \
+        profiletreewidget.cpp \
         profileview.cpp \
         registerview.cpp \
+        tabledialog.cpp \
         urinview.cpp \
         viewselectordialog.cpp
 
@@ -40,8 +43,11 @@ HEADERS += \
         labprofiledialog.h \
         labvalue.h \
         mainwindow.h \
+        paramdialog.h \
+        profiletreewidget.h \
         profileview.h \
         registerview.h \
+        tabledialog.h \
         urinview.h \
         viewselectordialog.h
 
@@ -49,10 +55,14 @@ FORMS += \
         followupview.ui \
         labprofiledialog.ui \
         mainwindow.ui \
+        paramdialog.ui \
         profileview.ui \
         registerview.ui \
+        tabledialog.ui \
         urinview.ui \
         viewselectordialog.ui
+
+TRANSLATIONS = labtool_de.ts
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Einstellungen: Laborprofile</string>
+   <string>Settings: Laboratory profiles</string>
   </property>
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
@@ -22,7 +22,7 @@
      <height>601</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="parameterLayout">
     <item>
      <widget class="QLabel" name="profileLabel">
       <property name="text">
@@ -46,7 +46,7 @@
       </property>
       <column>
        <property name="text">
-        <string>Laborwert</string>
+        <string>Laboratory parameter</string>
        </property>
       </column>
      </widget>
@@ -56,14 +56,14 @@
       <item>
        <widget class="QLineEdit" name="labparamInput">
         <property name="placeholderText">
-         <string>Neuen Laborwert hinzufügen</string>
+         <string>Add new laboratory parameter</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="addLabparamButton">
         <property name="text">
-         <string>Hinzufügen</string>
+         <string>Add</string>
         </property>
        </widget>
       </item>
@@ -84,7 +84,7 @@
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Laborprofile</string>
+       <string>Laboratory profile</string>
       </property>
      </widget>
     </item>

@@ -28,6 +28,10 @@ private slots:
 
     void on_openProfileButton_clicked();
 
+    void on_languageCombo_currentIndexChanged(const QString &arg1);
+
+    void on_languageCombo_currentTextChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     RegisterView *rView;
@@ -35,6 +39,7 @@ private:
 
     void loadProfiles();
     QMap<QString, QSettings*> *profiles;
+    QSettings *settings;
 };
 
 #endif // MAINWINDOW_H

@@ -6,10 +6,27 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    qDebug() << "Application file path " << QApplication::applicationDirPath();
+    QDir appDir = QApplication::applicationDirPath();
+    settings = new QSettings(appDir.absoluteFilePath("settings.ini"),QSettings::IniFormat);
+
     profiles = new QMap<QString,QSettings*>();
     loadProfiles();
     rView = new RegisterView(this);
     fView = new FollowupView(this);
+
+
+    QDir dir(":/translations");
+    QStringList fileNames = dir.entryList(QStringList("*.qm"), QDir::Files,
+                                          QDir::Name);
+    for (QString &fileName : fileNames)
+        fileName = fileName.sliced(8,2);
+
+    QString language = settings->value("language").toString();
+
+    ui->languageCombo->addItem(tr("en"));
+    ui->languageCombo->addItems(fileNames);
+    ui->languageCombo->setCurrentText(language);
 }
 
 MainWindow::~MainWindow()
@@ -59,4 +76,14 @@ void MainWindow::loadProfiles()
             ui->profilesComboBox->addItem(profName);
         }
     }
+}
+
+void MainWindow::on_languageCombo_currentIndexChanged(const QString &arg1)
+{
+
+}
+
+void MainWindow::on_languageCombo_currentTextChanged(const QString &arg1)
+{
+    settings->setValue("language",arg1);
 }

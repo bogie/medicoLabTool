@@ -7,6 +7,18 @@
 #include <QMimeData>
 #include <QClipboard>
 
+class LabParamPosition {
+    public:
+        LabParamPosition(QWidget* widget, int position) {
+            this->widget = widget;
+            this->position = position;
+        }
+
+    private:
+        QWidget* widget;
+        int position;
+};
+
 namespace Ui {
 class ProfileView;
 }
@@ -34,6 +46,7 @@ private:
     QSettings *settings;
 
     QMap<QString, int> indexes;
+    QMap<QString, LabParamPosition> positions;
 
     void loadIndexes();
     QByteArray localizeString(QString input);

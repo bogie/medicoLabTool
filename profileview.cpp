@@ -3,8 +3,8 @@
 
 ProfileView::ProfileView(QWidget *parent, QSettings *settings) :
     QMainWindow(parent),
-    settings(settings),
-    ui(new Ui::ProfileView)
+    ui(new Ui::ProfileView),
+    settings(settings)
 {
     ui->setupUi(this);
 
@@ -106,7 +106,7 @@ void ProfileView::on_labTable_customContextMenuRequested(const QPoint &pos)
 
     QMenu *menu = new QMenu(this);
 
-    QAction *copyRow = new QAction("Ganze Zeile kopieren📋",this);
+    QAction *copyRow = new QAction(tr("Copy line📋"),this);
     connect(copyRow, &QAction::triggered, this,
             [=]() { int row = ui->labTable->rowAt(pos.y()); on_copyRow(row); });
     if(item == nullptr){
@@ -118,7 +118,7 @@ void ProfileView::on_labTable_customContextMenuRequested(const QPoint &pos)
     menu->addAction(copyRow);
 
 
-    QAction *deleteRow = new QAction("Ganze Zeile löschen");
+    QAction *deleteRow = new QAction(tr("Delete line"));
     connect(deleteRow, &QAction::triggered, this, [=]() {
         if(ui->labTable->selectedRanges().length()>0) {
             QList<QTableWidgetSelectionRange> ranges = ui->labTable->selectedRanges();

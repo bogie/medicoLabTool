@@ -6,6 +6,9 @@ LabProfileDialog::LabProfileDialog(QWidget *parent) :
     ui(new Ui::LabProfileDialog)
 {
     ui->setupUi(this);
+
+    profWidget = new ProfileTreeWidget(this);
+    ui->parameterLayout->addWidget(profWidget);
     profiles = new QMap<QString,QSettings*>();
     loadProfiles();
 }
@@ -116,8 +119,8 @@ void LabProfileDialog::on_addLabparamButton_clicked()
 
     bool ok;
     QString codes = QInputDialog::getText(this,
-                                          tr("Medico Kennungen des Laborparameters angeben(optional mehrere durch Komma getrennt"),
-                                          "Kennung",QLineEdit::Normal,
+                                          tr("Add new laboratory code (optionally multiple codes seperated by comma)"),
+                                          tr("Laboratory code e.g. LEUK"),QLineEdit::Normal,
                                           "",
                                           &ok);
     if(ok && !codes.isEmpty()) {
@@ -144,21 +147,27 @@ void LabProfileDialog::on_labTreeWidget_customContextMenuRequested(const QPoint 
 
     QMenu *menu = new QMenu(this);
 
-    QAction *addChild = new QAction("Hinzufügen", this);
+    QAction *addChild = new QAction(tr("Add new laboratory code"), this);
     connect(addChild, &QAction::triggered, this, [=]() {
         bool ok;
-        QString param = QInputDialog::getText(this, tr("Medico Kennung des Laborparameters angeben"),"Kennung:",QLineEdit::Normal,"",&ok);
-        if(ok && !param.isEmpty()) {
-            qDebug() << "adding new lab code:" << param;
+        QString codes = QInputDialog::getText(this,
+                                              tr("Add new laboratory code (optionally multiple codes seperated by comma)"),
+                                              tr("Laboratory code e.g. LEUK:"),
+                                              QLineEdit::Normal,"",&ok);
+        if(ok && !codes.isEmpty()) {
+            qDebug() << "adding new lab code(s): " << codes;
 
-            QTreeWidgetItem* child = new QTreeWidgetItem(item);
-            child->setText(0,param);
-            item->addChild(child);
+            QStringList codeList = codes.split(",",Qt::SkipEmptyParts);
+            for(QString code : codeList) {
+                QTreeWidgetItem* child = new QTreeWidgetItem(item);
+                child->setText(0,code);
+                item->addChild(child);
+            }
         }
 
     });
-    QAction *removeItem = new QAction("Löschen",this);
-    removeItem->setStatusTip("Löscht den Eintrag");
+    QAction *removeItem = new QAction(tr("Delete laboratory code"),this);
+    removeItem->setStatusTip(tr("Deletes the entry"));
     connect(removeItem, &QAction::triggered, this, [=]() {
         delete item;
     });
@@ -171,6 +180,10 @@ void LabProfileDialog::on_labTreeWidget_customContextMenuRequested(const QPoint 
 }
 
 void LabProfileDialog::saveProfile() {
+    if(selectedProfile.isEmpty()) {
+        qDebug() << "no profiles to save!";
+        return;
+    }
     QSettings* s = profiles->value(selectedProfile);
     QStringList labOrder;
     s->setValue("profilename",selectedProfile);
@@ -198,16 +211,20 @@ void LabProfileDialog::on_profileListWidget_customContextMenuRequested(const QPo
 
     if(item==nullptr) {
         qDebug() << "item is nullptr";
-        QAction *addChild = new QAction("Profil hinzufügen", this);
+        QAction *addChild = new QAction(tr("Add profile"), this);
         connect(addChild, &QAction::triggered, this, [=]() {
             bool ok;
-            QString param = QInputDialog::getText(this, tr("Profilname eingeben"),"Name:",QLineEdit::Normal,"",&ok);
+            QString param = QInputDialog::getText(this, tr("Enter profile name"),tr("Name:"),QLineEdit::Normal,"",&ok);
             if(ok && !param.isEmpty()) {
                 qDebug() << "adding new profile: " << param;
                 if(createProfileFile(param)) {
                     QListWidgetItem* item = new QListWidgetItem(ui->profileListWidget);
                     item->setText(param);
                     ui->profileListWidget->addItem(item);
+                    if(selectedProfile.isEmpty()) {
+                        qDebug() << "no previous profile selected, selecting newly created profile: " << param;
+                        selectLabProfile(param);
+                    }
                 } else {
                     qDebug() << "failed to add new profile: reason exists";
                 }
@@ -216,8 +233,8 @@ void LabProfileDialog::on_profileListWidget_customContextMenuRequested(const QPo
         });
         menu->addAction(addChild);
     } else {
-        QAction *removeItem = new QAction("Löschen",this);
-        removeItem->setStatusTip("Profil löschen");
+        QAction *removeItem = new QAction(tr("Delete profile"),this);
+        removeItem->setStatusTip(tr("Removes the selected profile"));
         connect(removeItem, &QAction::triggered, this, [=]() {
             delete item;
         });

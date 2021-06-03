@@ -1,5 +1,12 @@
 <RCC>
     <qresource prefix="/icons">
         <file>warning.jpg</file>
+        <file>vial.webp</file>
+        <file>codes.png</file>
+        <file>table.png</file>
+        <file>vial.png</file>
+    </qresource>
+    <qresource prefix="/translations">
+        <file>labtool_de.qm</file>
     </qresource>
 </RCC>

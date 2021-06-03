@@ -30,34 +30,37 @@
       <item>
        <widget class="QPushButton" name="loadRawLab">
         <property name="text">
-         <string>Labor Laden</string>
+         <string>Parse raw data</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="copyAllLabs">
         <property name="text">
-         <string>Alle Labore kopieren</string>
+         <string>Copy all labs</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="clearAll">
         <property name="text">
-         <string>neuer Patient</string>
+         <string>New patient</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QComboBox" name="delimiterCombo">
+        <property name="toolTip">
+         <string>Choose the decimal delimiter</string>
+        </property>
         <item>
          <property name="text">
-          <string>Komma</string>
+          <string>Comma</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Punkt</string>
+          <string>Point</string>
          </property>
         </item>
        </widget>

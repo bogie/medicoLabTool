@@ -12,6 +12,8 @@
 #include <QInputDialog>
 #include <QKeyEvent>
 
+#include "profiletreewidget.h"
+
 namespace Ui {
 class LabProfileDialog;
 }
@@ -43,6 +45,7 @@ private:
     Ui::LabProfileDialog *ui;
     QMap<QString, QSettings*> *profiles;
     QString selectedProfile;
+    ProfileTreeWidget *profWidget;
 
 
     void loadProfiles();
