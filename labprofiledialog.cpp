@@ -64,28 +64,51 @@ void LabProfileDialog::selectLabProfile(QString profileName) {
     selectedProfile = profileName;
     ui->profileLabel->setText("Profile: "+profileName);
 
-    ui->labTreeWidget->clear();
+    profWidget->clear();
     // Logic to load data into tree widget
     QSettings* s = profiles->value(profileName);
-    if(!s->contains("laborder"))
+    if(!s->childGroups().contains("tables")) {
+        qDebug() << "profile does not contain tables";
         return;
-    QStringList labOrder = s->value("laborder").toStringList();
-    if(labOrder.length()>0) {
-        s->beginGroup("params");
-        for(QString param : labOrder) {
+    }
+
+    s->beginGroup("tables");
+    QStringList tables = s->childGroups();
+    for(QString table : tables) {
+        qDebug() << "loading table: " << table;
+        QTreeWidgetItem *tItem = new QTreeWidgetItem(profWidget);
+        tItem->setText(0,table);
+        tItem->setData(0,Qt::UserRole,"table");
+        s->beginGroup(table);
+        tItem->setData(0,0x0101,s->value("orientation").toString());
+        QStringList order = s->value("order").toStringList();
+        s->beginGroup("parameters");
+        for(QString param : order) {
+            QTreeWidgetItem *pItem = new QTreeWidgetItem(tItem);
+            pItem->setText(0,param);
+            pItem->setData(0,Qt::UserRole,"param");
             QStringList codes = s->value(param).toStringList();
-            qDebug() << "key: " << param << "loaded codes: " << codes;
-            QTreeWidgetItem* topItem = new QTreeWidgetItem();
-            topItem->setText(0,param);
-            for(QString code : codes) {
-                QTreeWidgetItem* child = new QTreeWidgetItem(topItem);
-                child->setText(0,code);
-                topItem->addChild(child);
+            pItem->setData(0,0x0101,codes);
+            for(QString code : codes){
+                QTreeWidgetItem *cItem = new QTreeWidgetItem(pItem);
+                cItem->setText(0,code);
+                cItem->setData(0,Qt::UserRole,"code");
+                QIcon icon(":/icons/codes.png");
+                cItem->setIcon(0,icon);
+                pItem->addChild(cItem);
             }
-            ui->labTreeWidget->addTopLevelItem(topItem);
+            QIcon vial(":/icons/vial.png");
+            pItem->setIcon(0,vial);
+            tItem->addChild(pItem);
         }
         s->endGroup();
+        QIcon tIcon(":/icons/table.png");
+        tItem->setIcon(0,tIcon);
+        profWidget->addTopLevelItem(tItem);
+        s->endGroup();
     }
+
+    s->endGroup();
 }
 
 bool LabProfileDialog::createProfileFile(QString profileName)
@@ -103,80 +126,12 @@ bool LabProfileDialog::createProfileFile(QString profileName)
              << profileDir.absoluteFilePath(profileName);
 
     QSettings *s = new QSettings(profileDir.absoluteFilePath(profileName+".ini"),QSettings::IniFormat);
+    s->setValue("version","2.0");
     s->setValue("profilename",profileName);
     s->sync();
     profiles->insert(profileName,s);
 
     return true;
-}
-
-void LabProfileDialog::on_addLabparamButton_clicked()
-{
-    QTreeWidgetItem* item = new QTreeWidgetItem(ui->labTreeWidget);
-    item->setText(0,ui->labparamInput->text());
-    ui->labTreeWidget->addTopLevelItem(item);
-    ui->labparamInput->clear();
-
-    bool ok;
-    QString codes = QInputDialog::getText(this,
-                                          tr("Add new laboratory code (optionally multiple codes seperated by comma)"),
-                                          tr("Laboratory code e.g. LEUK"),QLineEdit::Normal,
-                                          "",
-                                          &ok);
-    if(ok && !codes.isEmpty()) {
-        qDebug() << "adding new lab code(s): " << codes;
-
-        QStringList codeList = codes.split(",",Qt::SkipEmptyParts);
-        for(QString code : codeList) {
-            QTreeWidgetItem* child = new QTreeWidgetItem(item);
-            child->setText(0,code);
-            item->addChild(child);
-        }
-    }
-}
-
-void LabProfileDialog::on_labTreeWidget_customContextMenuRequested(const QPoint &pos)
-{
-    QTreeWidgetItem* item = ui->labTreeWidget->itemAt(pos);
-
-    if(item==nullptr)
-        return;
-    for(int i = 0; i < item->childCount(); i++) {
-        qDebug() << item->child(i)->text(0);
-    }
-
-    QMenu *menu = new QMenu(this);
-
-    QAction *addChild = new QAction(tr("Add new laboratory code"), this);
-    connect(addChild, &QAction::triggered, this, [=]() {
-        bool ok;
-        QString codes = QInputDialog::getText(this,
-                                              tr("Add new laboratory code (optionally multiple codes seperated by comma)"),
-                                              tr("Laboratory code e.g. LEUK:"),
-                                              QLineEdit::Normal,"",&ok);
-        if(ok && !codes.isEmpty()) {
-            qDebug() << "adding new lab code(s): " << codes;
-
-            QStringList codeList = codes.split(",",Qt::SkipEmptyParts);
-            for(QString code : codeList) {
-                QTreeWidgetItem* child = new QTreeWidgetItem(item);
-                child->setText(0,code);
-                item->addChild(child);
-            }
-        }
-
-    });
-    QAction *removeItem = new QAction(tr("Delete laboratory code"),this);
-    removeItem->setStatusTip(tr("Deletes the entry"));
-    connect(removeItem, &QAction::triggered, this, [=]() {
-        delete item;
-    });
-
-    if(item->parent() == nullptr)
-        menu->addAction(addChild);
-    menu->addAction(removeItem);
-
-    menu->popup(ui->labTreeWidget->viewport()->mapToGlobal(pos));
 }
 
 void LabProfileDialog::saveProfile() {
@@ -185,22 +140,29 @@ void LabProfileDialog::saveProfile() {
         return;
     }
     QSettings* s = profiles->value(selectedProfile);
-    QStringList labOrder;
-    s->setValue("profilename",selectedProfile);
-    s->remove("params");
-    s->beginGroup("params");
-    for(int t = 0; t < ui->labTreeWidget->topLevelItemCount(); t++) {
-        QTreeWidgetItem* topItem = ui->labTreeWidget->topLevelItem(t);
-        QStringList codes;
+
+    s->beginGroup("tables");
+    for(int t = 0; t < profWidget->topLevelItemCount(); t++) {
+        QTreeWidgetItem *topItem = profWidget->topLevelItem(t);
+        QString orientation = topItem->data(0,0x0101).toString();
+        qDebug() << "saveProfile: saving table " << topItem->text(0)
+                 << " with orientation " << orientation
+                 << " childCount is " << topItem->childCount();
+        QStringList order;
+        s->beginGroup(topItem->text(0));
+        s->beginGroup("parameters");
         for(int c = 0; c < topItem->childCount(); c++) {
-            codes.append(topItem->child(c)->text(0));
+            QTreeWidgetItem *param = topItem->child(c);
+            order.append(param->text(0));
+            QStringList codes = param->data(0,0x0101).toStringList();
+            s->setValue(param->text(0),codes);
         }
-        qDebug() << "got topItem: " << topItem->text(0) << " with codes: " << codes;
-        s->setValue(topItem->text(0),codes);
-        labOrder.append(topItem->text(0));
+        s->endGroup();
+        s->setValue("order",order);
+        s->setValue("orientation",orientation);
+        s->endGroup();
     }
     s->endGroup();
-    s->setValue("labOrder",labOrder);
 }
 
 void LabProfileDialog::on_profileListWidget_customContextMenuRequested(const QPoint &pos)
@@ -241,11 +203,6 @@ void LabProfileDialog::on_profileListWidget_customContextMenuRequested(const QPo
         menu->addAction(removeItem);
     }
     menu->popup(ui->profileListWidget->viewport()->mapToGlobal(pos));
-}
-
-void LabProfileDialog::on_labparamInput_returnPressed()
-{
-
 }
 
 void LabProfileDialog::on_okButton_clicked()

@@ -2,13 +2,13 @@
 
 LabValue::LabValue(QString line)
 {
-    qDebug() << "Creating new Single Lab Value: " << line;
+    //qDebug() << "Creating new Single Lab Value: " << line;
     QStringList split = line.split("\t");
     if(split.length()<2) {
         this->success = false;
         return;
     }
-    qDebug() << "split is: " << split;
+    //qDebug() << "split is: " << split;
     this->isPassthrough = false;
     this->param = split[0];
     this->paramName = split[1];
@@ -24,7 +24,7 @@ LabValue::LabValue(QString line)
     QStringList passThrough;
     passThrough << "Mat. fehlt" << "entfällt" << "folgt" << "s. Bem" << "s.u." << "folgt";
     if(passThrough.contains(this->value)) {
-        qDebug() << "parameter: " << paramName << " is passThrough";
+        //qDebug() << "parameter: " << paramName << " is passThrough";
         this->success = true;
         this->isPassthrough = true;
         return;
@@ -42,15 +42,15 @@ LabValue::LabValue(QString line)
         }
         if(this->value.endsWith("-"))
             this->value = this->value.remove("-");
-        qDebug() << "p: " << this->param << "output: " << this->value;
+        //qDebug() << "p: " << this->param << "output: " << this->value;
         if(this->param == "9ALBO") {
             // mg/dl statt g/dl! FAKTOR 1000!
             double albo = this->value.toDouble();
             albo  /= 1000;
-            qDebug() << "output is now: " << this->value;
-            qDebug() << "albo is now: " << albo;
+            //qDebug() << "output is now: " << this->value;
+            //qDebug() << "albo is now: " << albo;
             this->value = QString::number(albo);
-            qDebug() << "output is now: " << this->value;
+            //qDebug() << "output is now: " << this->value;
         }
         this->success = true;
     }
@@ -73,7 +73,7 @@ LabValue::LabValue(QString parameter, QString paramName, QString unit, QString r
     passThrough << "Mat. fehlt" << "entfällt" << "folgt" << "s. Bem" << "s.u." << "folgt";
     value = value.remove("<").remove(">").remove("(").remove(")").remove("?").simplified();
     if(passThrough.contains(value)) {
-        qDebug() << "parameter: " << paramName << " is passThrough";
+        //qDebug() << "parameter: " << paramName << " is passThrough";
         this->value = value;
         this->success = true;
         this->flag = "";
@@ -81,16 +81,16 @@ LabValue::LabValue(QString parameter, QString paramName, QString unit, QString r
         return;
     } else {
         QStringList vsplit = value.split(" ");
-        qDebug() << "value: " << value << " numsplit: " << vsplit.length();
+        //qDebug() << "value: " << value << " numsplit: " << vsplit.length();
         this->value = vsplit[0];
         if(this->param == "9ALBO") {
             // mg/dl statt g/dl! FAKTOR 1000!
             double albo = this->value.toDouble();
             albo  /= 1000;
-            qDebug() << "output is now: " << this->value;
-            qDebug() << "albo is now: " << albo;
+            //qDebug() << "output is now: " << this->value;
+            //qDebug() << "albo is now: " << albo;
             this->value = QString::number(albo);
-            qDebug() << "output is now: " << this->value;
+            //qDebug() << "output is now: " << this->value;
         }
         if(vsplit.length()==2)
             this->flag = vsplit[1];

@@ -7,6 +7,8 @@ ProfileTreeWidget::ProfileTreeWidget(QWidget *parent)
     this->setHeaderHidden(true);
     connect(this,&QWidget::customContextMenuRequested,
             this,&ProfileTreeWidget::on_customContextMenuRequested);
+
+    this->setDragDropMode(DragDropMode::InternalMove);
 }
 
 void ProfileTreeWidget::on_customContextMenuRequested(const QPoint &pos)

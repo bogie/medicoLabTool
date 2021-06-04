@@ -47,7 +47,7 @@ void MainWindow::on_followupViewButton_clicked()
 void MainWindow::on_actionProfile_triggered()
 {
     LabProfileDialog lpd(this);
-    int ret = lpd.exec();
+    lpd.exec();
     loadProfiles();
 }
 
@@ -68,6 +68,7 @@ void MainWindow::loadProfiles()
     profileDir.setFilter(QDir::Files);
     QStringList profileFileNames = profileDir.entryList();
 
+    ui->profilesComboBox->clear();
     if(profileFileNames.length() > 0) {
         for(QString fn : profileFileNames) {
             QSettings *s = new QSettings(profileDir.absoluteFilePath(fn),QSettings::IniFormat);

@@ -13,6 +13,17 @@
 #include <QKeyEvent>
 
 #include "profiletreewidget.h"
+struct Parameter {
+    QString name;
+    QStringList codes;
+};
+
+struct Table {
+    QString name;
+    QString orientation;
+    QStringList order;
+    QList<Parameter> parameters;
+};
 
 namespace Ui {
 class LabProfileDialog;
@@ -28,17 +39,8 @@ public:
 
 private slots:
     void on_profileListWidget_itemDoubleClicked(QListWidgetItem *item);
-
-    void on_addLabparamButton_clicked();
-
-    void on_labTreeWidget_customContextMenuRequested(const QPoint &pos);
-
     void on_profileListWidget_customContextMenuRequested(const QPoint &pos);
-
-    void on_labparamInput_returnPressed();
-
     void on_okButton_clicked();
-
     void on_cancelButton_clicked();
 
 private:
