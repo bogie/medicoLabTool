@@ -48,6 +48,7 @@ private:
     QMap<QString, QSettings*> *profiles;
     QString selectedProfile;
     ProfileTreeWidget *profWidget;
+    QSettings *settings;
 
 
     void loadProfiles();

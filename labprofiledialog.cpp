@@ -7,6 +7,9 @@ LabProfileDialog::LabProfileDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    QDir appDir = QApplication::applicationDirPath();
+    settings = new QSettings(appDir.absoluteFilePath("settings.ini"),QSettings::IniFormat);
+
     profWidget = new ProfileTreeWidget(this);
     ui->parameterLayout->addWidget(profWidget);
     profiles = new QMap<QString,QSettings*>();
@@ -20,7 +23,8 @@ LabProfileDialog::~LabProfileDialog()
 
 void LabProfileDialog::loadProfiles()
 {
-    QDir profileDir("profiles");
+    QDir profileDir(QApplication::applicationDirPath());
+    profileDir.cd("profiles");
     profileDir.setNameFilters(QStringList("*.ini"));
     profileDir.setFilter(QDir::Files);
     QStringList profileFileNames = profileDir.entryList();
@@ -32,36 +36,43 @@ void LabProfileDialog::loadProfiles()
             ui->profileListWidget->addItem(profName);
             profiles->insert(profName,s);
         }
-        QFont f = ui->profileListWidget->item(0)->font();
-        f.setBold(true);
-        ui->profileListWidget->item(0)->setFont(f);
-        selectLabProfile(ui->profileListWidget->item(0)->text());
+        QString defaultProfile = settings->value("selectedProfile").toString();
+        if(defaultProfile != "") {
+            selectLabProfile(defaultProfile);
+        } else {
+            selectLabProfile(ui->profileListWidget->item(0)->text());
+        }
     }
 }
 
 void LabProfileDialog::on_profileListWidget_itemDoubleClicked(QListWidgetItem *item)
 {
-    if(selectedProfile == item->text())
-        return;
-
-    qDebug() << "switching to profile: " << item->text();
-    // save old profile
-    saveProfile();
-
-    QFont f = item->font();
-    f.setBold(true);
-    item->setFont(f);
-
-    QList<QListWidgetItem*> pList = ui->profileListWidget->findItems(selectedProfile,Qt::MatchExactly);
-    QFont ff = pList.at(0)->font();
-    ff.setBold(false);
-    pList.at(0)->setFont(ff);
-
     selectLabProfile(item->text());
 }
 
 void LabProfileDialog::selectLabProfile(QString profileName) {
+    if(selectedProfile == profileName)
+        return;
+
+    qDebug() << "switching to profile: " << profileName;
+    // save old profile
+    saveProfile();
+
+    QList<QListWidgetItem*> oldItem = ui->profileListWidget->findItems(selectedProfile,Qt::MatchExactly);
+    if(oldItem.length()>0) {
+        QFont f = oldItem.at(0)->font();
+        f.setBold(false);
+        oldItem.at(0)->setFont(f);
+    }
+
     selectedProfile = profileName;
+    QList<QListWidgetItem*> pList = ui->profileListWidget->findItems(selectedProfile,Qt::MatchExactly);
+    QFont ff = pList.at(0)->font();
+    ff.setBold(true);
+    pList.at(0)->setFont(ff);
+
+
+    settings->setValue("selectedProfile",selectedProfile);
     ui->profileLabel->setText("Profile: "+profileName);
 
     profWidget->clear();

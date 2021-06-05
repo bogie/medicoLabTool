@@ -80,15 +80,20 @@ void MainWindow::loadProfiles()
             profiles->insert(profName,s);
             ui->profilesComboBox->addItem(profName);
         }
+        QString defaultProfile = settings->value("selectedProfile").toString();
+        if(defaultProfile != "" & ui->profilesComboBox->findText(defaultProfile)>=0) {
+            qDebug() << "selecting default profile " << defaultProfile;
+            ui->profilesComboBox->setCurrentText(defaultProfile);
+        }
     }
 }
 
-void MainWindow::on_languageCombo_currentIndexChanged(const QString &arg1)
+void MainWindow::on_profilesComboBox_textActivated(const QString &arg1)
 {
-
+    settings->setValue("selectedProfile",arg1);
 }
 
-void MainWindow::on_languageCombo_currentTextChanged(const QString &arg1)
+void MainWindow::on_languageCombo_textActivated(const QString &arg1)
 {
     settings->setValue("language",arg1);
 }

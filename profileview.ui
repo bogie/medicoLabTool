@@ -34,7 +34,14 @@
       <item>
        <widget class="QPushButton" name="loadRawLab">
         <property name="text">
-         <string>Parse raw data</string>
+         <string>Parse single data</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="parseCumulativeButton">
+        <property name="text">
+         <string>Parse cumulative data</string>
         </property>
        </widget>
       </item>
@@ -72,21 +79,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="bottomLayout">
-      <item>
-       <widget class="QTableWidget" name="labTable">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="contextMenuPolicy">
-         <enum>Qt::CustomContextMenu</enum>
-        </property>
-        <property name="editTriggers">
-         <set>QAbstractItemView::EditKeyPressed</set>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <layout class="QVBoxLayout" name="bottomLayout"/>
     </item>
    </layout>
   </widget>

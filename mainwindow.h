@@ -21,16 +21,12 @@ public:
 
 private slots:
     void on_registerViewButton_clicked();
-
     void on_followupViewButton_clicked();
-
     void on_actionProfile_triggered();
-
     void on_openProfileButton_clicked();
+    void on_profilesComboBox_textActivated(const QString &arg1);
 
-    void on_languageCombo_currentIndexChanged(const QString &arg1);
-
-    void on_languageCombo_currentTextChanged(const QString &arg1);
+    void on_languageCombo_textActivated(const QString &arg1);
 
 private:
     Ui::MainWindow *ui;

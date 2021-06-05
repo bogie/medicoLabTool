@@ -10,7 +10,6 @@ ProfileView::ProfileView(QWidget *parent, QSettings *settings) :
     mergingLabs = false;
 
     loadTables();
-    //loadIndexes();
     qDebug() << "Created ProfileView for profilename: " << settings->value("profilename");
 }
 
@@ -19,34 +18,14 @@ ProfileView::~ProfileView()
     delete ui;
 }
 
-void ProfileView::loadIndexes()
-{
-    QStringList order = settings->value("laborder").toStringList();
-    if(order.length()>0) {
-        settings->beginGroup("params");
-        for(int i=0; i < order.length(); i++) {
-            QString param = order.at(i);
-            QStringList codes = settings->value(param).toStringList();
-            qDebug() << "key: " << param << "loaded codes: " << codes;
-
-            for(QString code : codes) {
-                qDebug() << "added code: " << code << " at index: " << i;
-                indexes.insert(code,i);
-            }
-        }
-        settings->endGroup();
-
-        ui->labTable->setColumnCount(order.length());
-        ui->labTable->setHorizontalHeaderLabels(order);
-    }
-}
-
 void ProfileView::loadTables()
 {
     settings->beginGroup("tables");
     QStringList tables = settings->childGroups();
     for(QString table : tables) {
-        QTableWidget *newTable = new QTableWidget(this);
+        QVBoxLayout *l = new QVBoxLayout(this);
+        QLabel *label = new QLabel(table);
+        QTableWidget *newTable = new QTableWidget();
         newTable->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(newTable,&QWidget::customContextMenuRequested,
                 this,&ProfileView::on_customContextMenuRequested);
@@ -64,17 +43,20 @@ void ProfileView::loadTables()
             }
         }
         settings->endGroup();
+
+        l->addWidget(label);
+        l->addWidget(newTable);
         if(orientation=="horizontal") {
             newTable->setColumnCount(order.length());
             newTable->setHorizontalHeaderLabels(order);
-            ui->bottomLayout->addWidget(newTable);
+            ui->bottomLayout->addLayout(l);
         }
         else if(orientation=="vertical") {
             newTable->setRowCount(order.length());
             newTable->setColumnCount(1);
             newTable->setVerticalHeaderLabels(order);
             newTable->setHorizontalHeaderLabels(QStringList("Value"));
-            ui->topLayout->addWidget(newTable);
+            ui->topLayout->addLayout(l);
         }
 
         settings->endGroup();
@@ -108,7 +90,8 @@ void ProfileView::on_loadRawLab_clicked()
     QList<bool> addedList;
     QList<QTableWidget*> widgetList;
     for(int i = 0; i < ui->bottomLayout->count(); i++) {
-        QTableWidget* widget = (QTableWidget*)ui->bottomLayout->itemAt(i)->widget();
+        QVBoxLayout* layout = (QVBoxLayout*)ui->bottomLayout->itemAt(i);
+        QTableWidget* widget = (QTableWidget*)layout->itemAt(1)->widget();
         widget->insertRow(widget->rowCount());
         addedList.append(false);
         widgetList.append(widget);
@@ -153,52 +136,6 @@ void ProfileView::on_loadRawLab_clicked()
     }
 
     ui->rawLab->clear();
-}
-
-void ProfileView::on_labTable_customContextMenuRequested(const QPoint &pos)
-{
-    QTableWidgetItem* item = ui->labTable->itemAt(pos);
-    if(ui->labTable->rowCount()==0) {
-        return;
-    }
-
-    QMenu *menu = new QMenu(this);
-
-    QAction *copyRow = new QAction(tr("Copy line📋"),this);
-    connect(copyRow, &QAction::triggered, this,
-            [=]() { int row = ui->labTable->rowAt(pos.y()); on_copyRow(row); });
-    if(item == nullptr){
-        qDebug() << " no item at this position";
-    }
-
-    //menu->addAction(editCell);
-    menu->addSeparator();
-    menu->addAction(copyRow);
-
-
-    QAction *deleteRow = new QAction(tr("Delete line"));
-    connect(deleteRow, &QAction::triggered, this, [=]() {
-        if(ui->labTable->selectedRanges().length()>0) {
-            QList<QTableWidgetSelectionRange> ranges = ui->labTable->selectedRanges();
-            qDebug() << "got ranges length: " << ranges.length();
-            for(int i = ranges.length(); i>0; i--) {
-                QTableWidgetSelectionRange range = ranges.at(i-1);
-                if((range.bottomRow()-range.topRow()) >= 1) {
-                    for(int r = range.bottomRow(); r >= range.topRow(); r--) {
-                        qDebug() << "removing multi row: " << r;
-                        ui->labTable->removeRow(r);
-                    }
-                } else {
-                    qDebug() << "removing single row: " << range.bottomRow();
-                    ui->labTable->removeRow(range.bottomRow());
-                }
-            }
-        }
-    });
-    menu->addSeparator();
-    menu->addAction(deleteRow);
-
-    menu->popup(ui->labTable->viewport()->mapToGlobal(pos));
 }
 
 void ProfileView::on_customContextMenuRequested(const QPoint &pos)
@@ -311,45 +248,23 @@ void ProfileView::on_customContextMenuRequested(const QPoint &pos)
 
 void ProfileView::on_clearAll_clicked()
 {
-    for(int i = ui->labTable->rowCount(); i >=0; i--){
-        ui->labTable->removeRow(i);
-    }
-
     for(int i = 0; i < ui->bottomLayout->count(); i++) {
-        QTableWidget* widget = (QTableWidget*)ui->bottomLayout->itemAt(i)->widget();
+        QVBoxLayout* layout = (QVBoxLayout*)ui->bottomLayout->itemAt(i);
+        QTableWidget* widget = (QTableWidget*)layout->itemAt(1)->widget();
         for(int i = widget->rowCount(); i>=0; i--) {
             widget->removeRow(i);
         }
     }
 
     for(int i = 0; i < ui->topLayout->count(); i++) {
-        if(QTableWidget* widget = qobject_cast<QTableWidget*>(ui->topLayout->itemAt(i)->widget())){
+        QVBoxLayout* layout = (QVBoxLayout*)ui->topLayout->itemAt(i);
+        if(QTableWidget* widget = qobject_cast<QTableWidget*>(layout->itemAt(1)->widget())){
             widget->clearContents();
         }
 
     }
 
     ui->rawLab->clear();
-}
-
-void ProfileView::on_copyRow(int row)
-{
-    QByteArray items;
-     for(int i = 0; i< ui->labTable->columnCount(); i++) {
-
-         QTableWidgetItem* item = ui->labTable->item(row,i);
-         if(item == nullptr) {
-             items.append("");
-         } else {
-             items.append(localizeString(item->data(256).toString()));
-         }
-         if(i< ui->labTable->columnCount()-1)
-             items.append("\t");
-     }
-     QMimeData *mimeData = new QMimeData();
-     mimeData->setData("text/plain",items);
-     QApplication::clipboard()->setMimeData(mimeData);
-
 }
 
 void ProfileView::on_copyWidgetRow(QTableWidget *widget, int row)
@@ -392,7 +307,7 @@ void ProfileView::on_copyWidgetColumn(QTableWidget *widget)
 
 void ProfileView::on_copyAllLabs_clicked()
 {
-    QByteArray items;
+/*    QByteArray items;
     qDebug() << "onCopy: roWcount is: " << ui->labTable->rowCount();
     for(int r = 0; r < ui->labTable->rowCount(); r++) {
         if(ui->labTable->verticalHeaderItem(r) != nullptr){
@@ -415,5 +330,95 @@ void ProfileView::on_copyAllLabs_clicked()
     }
     QMimeData *mimeData = new QMimeData();
     mimeData->setData("text/plain",items);
-    QApplication::clipboard()->setMimeData(mimeData);
+    QApplication::clipboard()->setMimeData(mimeData);*/
+}
+
+void ProfileView::on_parseCumulativeButton_clicked()
+{
+    QString data = ui->rawLab->toPlainText();
+    if(data.length()==0)
+        return;
+    QStringList strList = data.split(QRegularExpression("[\n]"),Qt::SkipEmptyParts);
+    int labCount = strList.at(0).split("\t").length();
+    labCount -= 3;
+    qDebug() << "multi has: " << labCount << " labs";
+
+    QList<int> initialRowCount;
+    QList<QTableWidget*> widgetList;
+    QList<QList<bool>> addedRows;
+    for(int i = 0; i < ui->bottomLayout->count(); i++) {
+        QVBoxLayout* layout = (QVBoxLayout*)ui->bottomLayout->itemAt(i);
+        QTableWidget* widget = (QTableWidget*)layout->itemAt(1)->widget();
+        initialRowCount.append(widget->rowCount());
+        widget->setRowCount(widget->rowCount()+labCount);
+        QList<bool> newRows;
+        newRows.fill(false,widget->rowCount()+labCount);
+        addedRows.append(newRows);
+        widgetList.append(widget);
+    }
+
+    foreach(QString str, strList) {
+        QStringList split = str.split("\t");
+        QString p = split[0];
+        QString paramName = split[1];
+        QString unit = split[2];
+        QString refRange = split[3];
+
+
+        if(!positions.contains(p)) {
+            qDebug() << "paramter is not tracked: " << p;
+            continue;
+        }
+
+        LabParamPosition pos = positions.value(p);
+
+        for(int i=4;i<split.length();i++) {
+            LabValue lab = LabValue(p, paramName, unit, refRange, split[i]);
+
+            if(lab.success) {
+                qDebug() << "found lab value: " << lab.paramName << " and value: " << lab.value;
+                QString value = lab.getValue();
+                QString prettyValue = value;
+                if(!lab.isPassthrough)
+                    prettyValue += lab.unit;
+                QTableWidgetItem* item = new QTableWidgetItem(prettyValue);
+                item->setData(256,value);
+                item->setTextAlignment(Qt::AlignCenter);
+                item->setToolTip(lab.comment);
+                if(lab.flag=="+")
+                    item->setBackground(QColor(Qt::GlobalColor::red));
+                else if(lab.flag=="-")
+                    item->setBackground(QColor(Qt::GlobalColor::blue));
+
+                if(pos.orientation == "horizontal") {
+                    // we need to track the row!
+                    int widgetIdx = widgetList.indexOf(pos.widget);
+
+                    // we add split.length() rows to each widget, start iterating from i=4(since 0-3 are static values)
+                    // as such intialRowCount + i - 4 = current row
+                    int row = initialRowCount.at(widgetIdx) + i - 4;
+                    QList<bool> newRows = addedRows.at(widgetIdx);
+                    newRows[row] = true;
+                    addedRows[widgetIdx] = newRows;
+                    qDebug() << "replaced addedRows value with " << addedRows.at(widgetIdx).at(row);
+                    qDebug() << "Inserting new horizontal item at widgetIdx: " << widgetIdx
+                             << " in row " << row << " at position " << pos.position;
+                    pos.widget->setItem(row,pos.position,item);
+                } else if(pos.orientation == "vertical") {
+                    if(pos.widget->item(pos.position,0) == nullptr)
+                        pos.widget->setItem(pos.position,0,item);
+                }
+            }
+        }
+    }
+    for(int i = 0; i < widgetList.length(); i++) {
+        QList<bool> rowList = addedRows.value(i);
+        for(int j = rowList.length()-1; j>=0; j--) {
+            if(rowList.at(j) == false) {
+                widgetList.at(i)->removeRow(j);
+            }
+        }
+    }
+
+    ui->rawLab->clear();
 }

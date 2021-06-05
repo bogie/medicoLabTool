@@ -13,8 +13,9 @@ FollowupView::FollowupView(QWidget *parent) :
 
     QHeaderView* header = ui->tableWidget->verticalHeader();
     header->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(header, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on_verticalHeader_customContextMenuRequested(QPoint)));
-    connect(header, SIGNAL(sectionDoubleClicked(int)),this, SLOT(on_verticalHeader_doubleClicked(int)));
+
+    connect(header, &QHeaderView::customContextMenuRequested, this, &FollowupView::on_verticalHeader_customContextMenuRequested);
+    connect(header, &QHeaderView::sectionDoubleClicked,this, &FollowupView::on_verticalHeader_doubleClicked);
     ui->comboBox->addItem("Komma");
     ui->comboBox->addItem("Punkt");
     ui->comboBox->setCurrentIndex(0);

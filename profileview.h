@@ -8,6 +8,8 @@
 #include <QClipboard>
 #include <QTableWidget>
 #include <QMessageBox>
+#include <QLabel>
+#include <QVBoxLayout>
 
 class LabParamPosition {
     public:
@@ -42,28 +44,21 @@ public:
 
 private slots:
     void on_copyAllLabs_clicked();
-
     void on_loadRawLab_clicked();
-
-    void on_labTable_customContextMenuRequested(const QPoint &pos);
-
     void on_customContextMenuRequested(const QPoint &pos);
-
     void on_clearAll_clicked();
-    void on_copyRow(int row);
     void on_copyWidgetRow(QTableWidget* widget, int row);
     void on_copyWidgetColumn(QTableWidget* widget);
+    void on_parseCumulativeButton_clicked();
 
 private:
     Ui::ProfileView *ui;
     QSettings *settings;
     bool mergingLabs;
 
-    QMap<QString, int> indexes;
     QMap<QString, LabParamPosition> positions;
     QMap<QTableWidget*,QString> tableWidgets;
 
-    void loadIndexes();
     void loadTables();
     QByteArray localizeString(QString input);
 };
