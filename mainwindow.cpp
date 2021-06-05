@@ -63,14 +63,18 @@ void MainWindow::on_openProfileButton_clicked()
 
 void MainWindow::loadProfiles()
 {
-    QDir profileDir("profiles");
+    QDir profileDir(QApplication::applicationDirPath());
+    profileDir.cd("profiles");
     profileDir.setNameFilters(QStringList("*.ini"));
     profileDir.setFilter(QDir::Files);
     QStringList profileFileNames = profileDir.entryList();
 
+    qDebug() << "loadProfiles: absolute path is " << profileDir.absolutePath()
+             << " and profileFileNames are: " << profileFileNames;
+
     ui->profilesComboBox->clear();
     if(profileFileNames.length() > 0) {
-        for(QString fn : profileFileNames) {
+        for(const QString &fn : profileFileNames) {
             QSettings *s = new QSettings(profileDir.absoluteFilePath(fn),QSettings::IniFormat);
             QString profName = s->value("profilename",fn).toString();
             profiles->insert(profName,s);
