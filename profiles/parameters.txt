@@ -1,0 +1,136 @@
+LEUK	Leukozyten
+ERY	Erythrozyten
+9HB	#..Hämoglobin
+9HKT	#..Hämatokrit
+MCV	MCV
+MCH	MCH
+9MCHC	#..MCHC
+RDW	Erythroz.vert.breite
+THRO	Thrombozyten
+NEUR	Neutrophile Granuloz
+SEGA	Neut.Granu.(absolut)
+LYMR	Lymphozyten
+LYMAB	Lymphozyten(absolut)
+MONR	Monozyten
+MONOA	Monozyten (absolut)
+EOSR	Eosinophile Granuloz
+EOSAB	Eo. Granu. (absolut)
+BASR	Basophile Granuloz.
+BASOA	baso. Granu(absolut)
+NOROA	Normoblasten absolut
+TPZ	TPZ (Quick)
+INR	INR
+PTT	aPTT (PTT)
+AT3	Antithrombin III
+9FIB	#..Fibrinogen
+DD	D-Dimere
+TZ	TZ (Thrombinzeit)
+HBA1CI	HbA1c (IFCC)
+9HBA1CM	HbA1c (IFCC)
+MBG	Mittl. Blut-Glukose
+SERUHI	Serum Hämolyse-Index
+NA	Natrium
+K	Kalium
+PHOS	Phosphat
+CHOL	Cholesterin
+HDLC	HDL-Cholesterin
+LDLC	LDL-Cholesterin
+TRIG	Triglyzeride
+99LPAK	#..Lipoprotein (a)
+GLUC	Glukose
+9ALB	#..Albumin
+TBIL	Bilirubin (gesamt)
+DBIL	Bilirubin (direktes)
+AST37	AST (37°C)
+ALT37	ALT (37°C)
+GGT37	gamma-GT (37°C)
+AP37	AP (37°C)
+LDH37	LDH (37°C)
+CK37	CK (37°C)
+CKMBMa	CK-MB (Masse)
+TNTHS	Troponin T high sens
+NTpBNP2	BNP (NT-proBNP)
+HST	Harnstoff
+CKDEPI	GFR (CKD-EPI Formel)
+KREA	Kreatinin
+OSM	Osmolalität(gemess.)
+CRP	CRP
+PCTKM	Procalcitonin
+LACT	Laktat
+9FE	#..Eisen
+TRAF	Transferrin
+TRAFS	Transferrinsättigung
+FERR	Ferritin
+SPGU	Spez. Gewicht
+PHU	pH
+9LEUU	Leukozyten
+9HBU	Erythrozyten
+9BILU	Bilirubin (U)
+9UROU	Urobilinogen
+9TPU	Protein (qual.)
+9KETU	Ketonkörper
+9NITU	Nitrit
+9GLUU	Glukose (U)
+SERYUF	Erythrozyten 
+DERY	dysmorphe Erythrozyt
+SLEUUF	Leukozyten 
+PLEPUF	Plattenepithelzellen
+RUEPUF	Rundepithelzellen
+UZYLA	hyal. Zylinder
+ZYLUF	Path. Zylinder
+9COND	Leitfähigkeit
+9BAKTUF	Bakterien 
+KRSTUF	Kristalle
+UHEFE	Hefen mikr.
+TPSP	Protein (U)
+TPKRSP	Protein/Kreatinin
+KRSP	Kreatinin (Spont.U.)
+HSSP	Harnstoff (SpU)
+HSKRQ	Harnstoff-Krea-Quot.
+ALSP	Albumin (U)
+ALKRSP	Albumin/Kreatinin (U
+ABE	Basenabweichung
+PHV	ph (venös)
+PCO2V	pCO2 (venös)
+HCO3V	Standardbicarbonat
+SBEV	Standard-Base-Excess
+PO2V	pO2 (venös)
+SO2V	Sauerstoffsättigung
+METHn	Methämoglobin
+COHBn	CO-Hämoglobin 
+VD25T	25-OH-Vitamin D3 tot
+VD125	1,25-(OH)2-Vitamin D
+KRSP	Kreatinin (Spont.U.)
+IGKRSP	IgG/Crea-Quotient
+9IGSP	#..IgG (U)
+ALSP	Albumin (U)
+ALKRSP	Albumin/Kreatinin (U
+9A1SP	alpha-1-Mikroglob.(U
+A1KRSP	a1-Mikrogl./Crea-Quo
+9A2SP	#..alpha-2-Makr.g.(U
+A2KRSP	a2-Makrogl./Crea-Quo
+IGALSP	IgG/Albumin
+AIATP	Albumin+IgG+alpha-1-
+A2ALSP	alpha2-Makroglobulin
+CYSCK	Cystatin C
+MYO	Myoglobin
+TSHKK	TSH
+9FT3KK	#..fT3
+9FT4KK	#..fT4
+AVP	Copeptin (CT-proAVP)
+9ADSTi	#..Aldosteron
+IL2R	IL-2-Rezeptor(lösl.)
+IL6KE	IL-6(ECLIA Roche)
+TNFA	TNF-alpha
+BC19A	B Lymphoz CD19+ abs
+BC19	B Lymphoz CD19+ rel
+TC3A	T Lymph CD3+ abs
+TC3	T Lymph CD3+ rel
+HC34A	T Helfer CD3+CD4+abs
+HC34	T Helfer CD3+CD4+rel
+SZC38A	T Suppr CD3+CD8+ abs
+SZC38	T Suppr CD3+CD8+ rel
+QC3438	Quot CD3 CD4/CD3 CD8
+N1656A	NK Zel CD16+/56+ abs
+N1656	NK Zel CD16+/56+rel
+9ACEYE	ACE

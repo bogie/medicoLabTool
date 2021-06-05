@@ -49,22 +49,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="followupview.cpp" line="385"/>
+        <location filename="followupview.cpp" line="384"/>
         <source>QInputDialog::getText()</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="followupview.cpp" line="386"/>
+        <location filename="followupview.cpp" line="385"/>
         <source>User name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="followupview.cpp" line="400"/>
+        <location filename="followupview.cpp" line="399"/>
         <source>Datum eintragen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="followupview.cpp" line="401"/>
+        <location filename="followupview.cpp" line="400"/>
         <source>Datum:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -78,80 +78,90 @@
         <translation>Einstellungen: Laborprofile</translation>
     </message>
     <message>
+        <location filename="labprofiledialog.ui" line="49"/>
         <source>Laboratory parameter</source>
-        <translation type="vanished">Laborparamter</translation>
+        <translation>Laborparamter</translation>
     </message>
     <message>
+        <location filename="labprofiledialog.ui" line="59"/>
         <source>Add new laboratory parameter</source>
-        <translation type="vanished">Neuen Laborparameter hinzufügen</translation>
+        <translation>Neuen Laborparameter hinzufügen</translation>
     </message>
     <message>
+        <location filename="labprofiledialog.ui" line="66"/>
         <source>Add</source>
-        <translation type="vanished">Hinzufügen</translation>
+        <translation>Hinzufügen</translation>
     </message>
     <message>
-        <location filename="labprofiledialog.ui" line="48"/>
+        <location filename="labprofiledialog.ui" line="87"/>
         <source>Laboratory profile</source>
         <oldsource>Laborprofile</oldsource>
         <translation>Laborprofil</translation>
     </message>
     <message>
-        <location filename="labprofiledialog.ui" line="77"/>
+        <location filename="labprofiledialog.ui" line="116"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="labprofiledialog.ui" line="84"/>
+        <location filename="labprofiledialog.ui" line="123"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
+        <location filename="labprofiledialog.cpp" line="119"/>
+        <location filename="labprofiledialog.cpp" line="151"/>
         <source>Add new laboratory code (optionally multiple codes seperated by comma)</source>
         <oldsource>Medico Kennungen des Laborparameters angeben(optional mehrere durch Komma getrennt</oldsource>
-        <translation type="vanished">Neuen Medico Labor-Kode hinzufügen (optional mehrere durch Komma geteilte Kodes)</translation>
+        <translation>Neuen Medico Labor-Kode hinzufügen (optional mehrere durch Komma geteilte Kodes)</translation>
     </message>
     <message>
+        <location filename="labprofiledialog.cpp" line="120"/>
         <source>Laboratory code e.g. LEUK</source>
-        <translation type="vanished">Medico Labor-Kode z.B. LEUK</translation>
+        <translation>Medico Labor-Kode z.B. LEUK</translation>
     </message>
     <message>
+        <location filename="labprofiledialog.cpp" line="147"/>
         <source>Add new laboratory code</source>
-        <translation type="vanished">Neuen Medico Labor-Kode hinzufügen</translation>
+        <translation>Neuen Medico Labor-Kode hinzufügen</translation>
     </message>
     <message>
+        <location filename="labprofiledialog.cpp" line="152"/>
         <source>Laboratory code e.g. LEUK:</source>
-        <translation type="vanished">Medico Labor-Kode z.B. LEUK:</translation>
+        <translation>Medico Labor-Kode z.B. LEUK:</translation>
     </message>
     <message>
+        <location filename="labprofiledialog.cpp" line="166"/>
         <source>Delete laboratory code</source>
-        <translation type="vanished">Labor-Kode löschen</translation>
+        <translation>Labor-Kode löschen</translation>
     </message>
     <message>
+        <location filename="labprofiledialog.cpp" line="167"/>
         <source>Deletes the entry</source>
-        <translation type="vanished">Löscht den Labor-Kode</translation>
+        <translation>Löscht den Labor-Kode</translation>
     </message>
     <message>
-        <location filename="labprofiledialog.cpp" line="202"/>
+        <location filename="labprofiledialog.cpp" line="207"/>
         <source>Add profile</source>
         <translation>Profil hinzufügen</translation>
     </message>
     <message>
-        <location filename="labprofiledialog.cpp" line="205"/>
+        <location filename="labprofiledialog.cpp" line="210"/>
         <source>Enter profile name</source>
         <translation>Name des Profils eingeben</translation>
     </message>
     <message>
-        <location filename="labprofiledialog.cpp" line="205"/>
+        <location filename="labprofiledialog.cpp" line="210"/>
         <source>Name:</source>
         <translation>Name:</translation>
     </message>
     <message>
-        <location filename="labprofiledialog.cpp" line="224"/>
+        <location filename="labprofiledialog.cpp" line="225"/>
         <source>Delete profile</source>
         <translation>Profil löschen</translation>
     </message>
     <message>
-        <location filename="labprofiledialog.cpp" line="225"/>
+        <location filename="labprofiledialog.cpp" line="226"/>
         <source>Removes the selected profile</source>
         <translation>Löscht das ausgewählte Profil</translation>
     </message>
@@ -160,8 +170,7 @@
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="14"/>
-        <source>KKS Labtool v4.0</source>
-        <oldsource>KKS Labtool v3.5</oldsource>
+        <source>KKS Labtool v3.5</source>
         <translation></translation>
     </message>
     <message>
@@ -184,17 +193,6 @@
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;.AppleSystemUIFont&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;Explanation:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;Access the available profiles via Settings-&amp;gt;Profiles, there you can add, remove and change profiles&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;Register: opens the view for the COVAS register&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;Followup: opens the view for the followups of the COVAS register&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;Open Profile: opens the view for the (above) selected profile&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <oldsource>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Explanation:&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
@@ -202,21 +200,28 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Register: opens the view for the COVAS register&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Followup: opens the view for the followups of the COVAS register&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Open Profile: opens the view for the (above) selected profile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
-        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Open Profile: opens the view for the (above) selected profile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <oldsource>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Erklärung der einzelnen Knöpfe:&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Oben bei Einstellungen-&gt;Profile können neue Profile angelegt werden und bestehende verändert werden.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Oben bei Einstellungen-&amp;gt;Profile können neue Profile angelegt werden und bestehende verändert werden.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Register: öffnet eine Ansicht für das aktuelle COVAS Register&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Followup: öffnet eine Ansicht für das aktuelle COVAS Followup&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Open Profile: öffnet eine Ansicht für das darüber ausgewählte Profil(siehe Einstellungen-&gt;Profile)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Open Profile: öffnet eine Ansicht für das darüber ausgewählte Profil(siehe Einstellungen-&amp;gt;Profile)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
+        <translation>Erklärung der einzelnen Knöpfe:
+
+Oben bei Einstellungen-&gt;Profile können neue Profile angelegt werden und bestehende verändert werden.
+
+Register: öffnet eine Ansicht für das aktuelle COVAS Register
+Followup: öffnet eine Ansicht für das aktuelle COVAS Followup
+Open Profile: öffnet eine Ansicht für das darüber ausgewählte Profil(siehe Einstellungen-&gt;Profile)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="102"/>
+        <location filename="mainwindow.ui" line="92"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
@@ -225,101 +230,10 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Einstellungen</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="111"/>
+        <location filename="mainwindow.ui" line="101"/>
         <source>Profiles</source>
         <oldsource>Profile</oldsource>
         <translation>Profile</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="27"/>
-        <source>en</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>ParamDialog</name>
-    <message>
-        <location filename="paramdialog.ui" line="14"/>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="paramdialog.ui" line="31"/>
-        <source>Parameter Name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="paramdialog.ui" line="52"/>
-        <source>Medico code</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="paramdialog.ui" line="58"/>
-        <source>Enter Medico code</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="paramdialog.ui" line="65"/>
-        <source>Add</source>
-        <translation type="unfinished">Hinzufügen</translation>
-    </message>
-    <message>
-        <location filename="paramdialog.ui" line="86"/>
-        <source>OK</source>
-        <translation type="unfinished">OK</translation>
-    </message>
-    <message>
-        <location filename="paramdialog.ui" line="93"/>
-        <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
-    </message>
-    <message>
-        <location filename="paramdialog.cpp" line="9"/>
-        <source>Add/modify laboratory parameter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="paramdialog.cpp" line="65"/>
-        <source>Delete laboratory code</source>
-        <translation type="unfinished">Labor-Kode löschen</translation>
-    </message>
-    <message>
-        <location filename="paramdialog.cpp" line="66"/>
-        <source>Deletes the entry</source>
-        <translation type="unfinished">Löscht den Labor-Kode</translation>
-    </message>
-</context>
-<context>
-    <name>ProfileTreeWidget</name>
-    <message>
-        <location filename="profiletreewidget.cpp" line="31"/>
-        <source>Add table</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="profiletreewidget.cpp" line="54"/>
-        <source>Modify table</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="profiletreewidget.cpp" line="70"/>
-        <source>Add parameter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="profiletreewidget.cpp" line="100"/>
-        <source>Modify parameter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="profiletreewidget.cpp" line="130"/>
-        <source>Delete item</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="profiletreewidget.cpp" line="131"/>
-        <source>Removes the selected profile</source>
-        <translation type="unfinished">Löscht das ausgewählte Profil</translation>
     </message>
 </context>
 <context>
@@ -330,68 +244,46 @@ p, li { white-space: pre-wrap; }
         <translation></translation>
     </message>
     <message>
+        <location filename="profileview.ui" line="33"/>
         <source>Parse raw data</source>
-        <translation type="vanished">Rohdaten parsen</translation>
+        <translation>Rohdaten parsen</translation>
     </message>
     <message>
-        <location filename="profileview.ui" line="37"/>
-        <source>Parse single data</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="profileview.ui" line="44"/>
-        <source>Parse cumulative data</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="profileview.ui" line="51"/>
+        <location filename="profileview.ui" line="40"/>
         <source>Copy all labs</source>
         <oldsource>Alle Labore kopieren</oldsource>
         <translation>Alle Labore kopieren</translation>
     </message>
     <message>
-        <location filename="profileview.ui" line="58"/>
+        <location filename="profileview.ui" line="47"/>
         <source>New patient</source>
         <oldsource>neuer Patient</oldsource>
         <translation>Neuer Patient</translation>
     </message>
     <message>
-        <location filename="profileview.ui" line="65"/>
+        <location filename="profileview.ui" line="54"/>
         <source>Choose the decimal delimiter</source>
         <translation>Dezimalseparator auswählen</translation>
     </message>
     <message>
-        <location filename="profileview.ui" line="69"/>
+        <location filename="profileview.ui" line="58"/>
         <source>Comma</source>
         <translation>Komma</translation>
     </message>
     <message>
-        <location filename="profileview.ui" line="74"/>
+        <location filename="profileview.ui" line="63"/>
         <source>Point</source>
         <translation>Punkt</translation>
     </message>
     <message>
+        <location filename="profileview.cpp" line="109"/>
         <source>Copy line📋</source>
-        <translation type="vanished">Zeile kopieren 📋</translation>
+        <translation>Zeile kopieren 📋</translation>
     </message>
     <message>
+        <location filename="profileview.cpp" line="121"/>
         <source>Delete line</source>
-        <translation type="vanished">Zeile löschen</translation>
-    </message>
-    <message>
-        <location filename="profileview.cpp" line="154"/>
-        <source>Copy row📋</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="profileview.cpp" line="162"/>
-        <source>Copy column📋</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="profileview.cpp" line="167"/>
-        <source>Delete row</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeile löschen</translation>
     </message>
 </context>
 <context>
@@ -902,39 +794,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="registerview.ui" line="605"/>
         <source>Hefen mikr</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>TableDialog</name>
-    <message>
-        <location filename="tabledialog.ui" line="14"/>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tabledialog.ui" line="47"/>
-        <source>Name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tabledialog.ui" line="61"/>
-        <source>Orientation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tabledialog.ui" line="69"/>
-        <source>horizontal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tabledialog.ui" line="74"/>
-        <source>vertical</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tabledialog.cpp" line="9"/>
-        <source>Add/modify table</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

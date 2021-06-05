@@ -12,7 +12,8 @@ int main(int argc, char *argv[])
     //ViewSelectorDialog d;
     //d.show();
 
-    QSettings *settings = new QSettings(a.applicationDirPath()+"settings.ini",QSettings::IniFormat);
+    QDir path(QApplication::applicationDirPath());
+    QSettings *settings = new QSettings(path.absoluteFilePath("settings.ini"),QSettings::IniFormat);
 
     QString language = settings->value("language").toString();
 
@@ -26,17 +27,21 @@ int main(int argc, char *argv[])
         QStringList fileNames = transDir.entryList(QStringList("*.qm"), QDir::Files,
                                                   QDir::Name);
 
+        qDebug() << "Translation: got file names " << fileNames;
         QMap<QString,QString> fileMap;
         for (QString fileName : fileNames) {
                 QString path = transDir.filePath(fileName);
                 QString name = fileName.sliced(8,2);
+                qDebug() << "Inserting path " << path << " for translation " << name;
                 fileMap.insert(name,path);
         }
 
+        qDebug() << "loading language: " << language;
         const QString &qmlFile = fileMap.value(language);
         qDebug() << "loading qml file: " << qmlFile;
         if(translator.load(qmlFile)) {
-            QCoreApplication::installTranslator(&translator);
+            a.installTranslator(&translator);
+            //QCoreApplication::installTranslator(&translator);
             qDebug() << "installed translator";
         }
     }

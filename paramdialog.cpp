@@ -52,6 +52,8 @@ void ParamDialog::on_cancelButton_clicked()
 
 void ParamDialog::on_addCodeButton_clicked()
 {
+    if(ui->codeEdit->text().isEmpty())
+        return;
     ui->codesListWidget->addItem(ui->codeEdit->text());
     ui->codeEdit->clear();
 }

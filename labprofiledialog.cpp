@@ -56,7 +56,8 @@ void LabProfileDialog::selectLabProfile(QString profileName) {
 
     qDebug() << "switching to profile: " << profileName;
     // save old profile
-    saveProfile();
+    if(selectedProfile != "" & selectedProfile != profileName)
+        saveProfile();
 
     QList<QListWidgetItem*> oldItem = ui->profileListWidget->findItems(selectedProfile,Qt::MatchExactly);
     if(oldItem.length()>0) {
@@ -65,19 +66,27 @@ void LabProfileDialog::selectLabProfile(QString profileName) {
         oldItem.at(0)->setFont(f);
     }
 
+    QList<QListWidgetItem*> pList = ui->profileListWidget->findItems(profileName,Qt::MatchExactly);
+    if(pList.length()>0) {
+        QFont ff = pList.at(0)->font();
+        ff.setBold(true);
+        pList.at(0)->setFont(ff);
+    }
+
+
+    // Logic to load data into tree widget
+    QSettings* s = profiles->value(profileName);
+    if(s == nullptr) {
+        qDebug() << "selectProfile: failed to get settings for profileName " << profileName;
+        return;
+    }
+
     selectedProfile = profileName;
-    QList<QListWidgetItem*> pList = ui->profileListWidget->findItems(selectedProfile,Qt::MatchExactly);
-    QFont ff = pList.at(0)->font();
-    ff.setBold(true);
-    pList.at(0)->setFont(ff);
-
-
     settings->setValue("selectedProfile",selectedProfile);
     ui->profileLabel->setText("Profile: "+profileName);
 
     profWidget->clear();
-    // Logic to load data into tree widget
-    QSettings* s = profiles->value(profileName);
+
     if(!s->childGroups().contains("tables")) {
         qDebug() << "profile does not contain tables";
         return;
@@ -124,7 +133,8 @@ void LabProfileDialog::selectLabProfile(QString profileName) {
 
 bool LabProfileDialog::createProfileFile(QString profileName)
 {
-    QDir profileDir("profiles");
+    QDir profileDir(QApplication::applicationDirPath());
+    profileDir.cd("profiles");
     profileDir.setNameFilters(QStringList("*.ini"));
     profileDir.setFilter(QDir::Files);
     QStringList profileFileNames = profileDir.entryList();
@@ -151,6 +161,11 @@ void LabProfileDialog::saveProfile() {
         return;
     }
     QSettings* s = profiles->value(selectedProfile);
+
+    if(s == nullptr) {
+        qDebug() << "could not find settings for profile: " << selectedProfile;
+        return;
+    }
 
     s->beginGroup("tables");
     for(int t = 0; t < profWidget->topLevelItemCount(); t++) {

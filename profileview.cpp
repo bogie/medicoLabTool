@@ -138,6 +138,100 @@ void ProfileView::on_loadRawLab_clicked()
     ui->rawLab->clear();
 }
 
+void ProfileView::on_parseCumulativeButton_clicked()
+{
+    QString data = ui->rawLab->toPlainText();
+    if(data.length()==0)
+        return;
+    QStringList strList = data.split(QRegularExpression("[\n]"),Qt::SkipEmptyParts);
+    int labCount = strList.at(0).split("\t").length();
+    labCount -= 3;
+    qDebug() << "multi has: " << labCount << " labs";
+
+    QList<int> initialRowCount;
+    QList<QTableWidget*> widgetList;
+    QList<QList<bool>> addedRows;
+    for(int i = 0; i < ui->bottomLayout->count(); i++) {
+        QVBoxLayout* layout = (QVBoxLayout*)ui->bottomLayout->itemAt(i);
+        QTableWidget* widget = (QTableWidget*)layout->itemAt(1)->widget();
+        initialRowCount.append(widget->rowCount());
+        QList<bool> newRows;
+        newRows.insert(0,widget->rowCount(),true);
+        widget->setRowCount(widget->rowCount()+labCount);
+        newRows.insert(newRows.length(),labCount,false);
+        //newRows.fill(false,widget->rowCount());
+        addedRows.append(newRows);
+        widgetList.append(widget);
+    }
+
+    foreach(QString str, strList) {
+        QStringList split = str.split("\t");
+        QString p = split[0];
+        QString paramName = split[1];
+        QString unit = split[2];
+        QString refRange = split[3];
+
+
+        if(!positions.contains(p)) {
+            //qDebug() << "paramter is not tracked: " << p;
+            continue;
+        }
+
+        LabParamPosition pos = positions.value(p);
+
+        for(int i=4;i<split.length();i++) {
+            LabValue lab = LabValue(p, paramName, unit, refRange, split[i]);
+
+            if(lab.success) {
+                //qDebug() << "found lab value: " << lab.paramName << " and value: " << lab.value;
+                QString value = lab.getValue();
+                QString prettyValue = value;
+                if(!lab.isPassthrough)
+                    prettyValue += lab.unit;
+                QTableWidgetItem* item = new QTableWidgetItem(prettyValue);
+                item->setData(256,value);
+                item->setTextAlignment(Qt::AlignCenter);
+                item->setToolTip(lab.comment);
+                if(lab.flag=="+")
+                    item->setBackground(QColor(Qt::GlobalColor::red));
+                else if(lab.flag=="-")
+                    item->setBackground(QColor(Qt::GlobalColor::blue));
+
+                if(pos.orientation == "horizontal") {
+                    // we need to track the row!
+                    int widgetIdx = widgetList.indexOf(pos.widget);
+
+                    // we add split.length() rows to each widget, start iterating from i=4(since 0-3 are static values)
+                    // as such intialRowCount + i - 4 = current row
+                    int row = initialRowCount.at(widgetIdx) + i - 4;
+                    QList<bool> newRows = addedRows.at(widgetIdx);
+                    newRows[row] = true;
+                    addedRows[widgetIdx] = newRows;
+                    //qDebug() << "replaced addedRows value with " << addedRows.at(widgetIdx).at(row);
+                    //qDebug() << "Inserting new horizontal item at widgetIdx: " << widgetIdx
+                    //         << " in row " << row << " at position " << pos.position;
+                    pos.widget->setItem(row,pos.position,item);
+                } else if(pos.orientation == "vertical") {
+                    if(pos.widget->item(pos.position,0) == nullptr)
+                        pos.widget->setItem(pos.position,0,item);
+                }
+            }
+        }
+    }
+    for(int i = 0; i < widgetList.length(); i++) {
+        qDebug() << "Removing rows for widget: " << i;
+        QList<bool> rowList = addedRows.value(i);
+        for(int j = rowList.length()-1; j>=0; j--) {
+            if(rowList.at(j) == false) {
+                qDebug() << "removing row " << j;
+                widgetList.at(i)->removeRow(j);
+            }
+        }
+    }
+
+    ui->rawLab->clear();
+}
+
 void ProfileView::on_customContextMenuRequested(const QPoint &pos)
 {
     qDebug() << "Got Custom context menu requested at pos: " << pos;
@@ -331,94 +425,4 @@ void ProfileView::on_copyAllLabs_clicked()
     QMimeData *mimeData = new QMimeData();
     mimeData->setData("text/plain",items);
     QApplication::clipboard()->setMimeData(mimeData);*/
-}
-
-void ProfileView::on_parseCumulativeButton_clicked()
-{
-    QString data = ui->rawLab->toPlainText();
-    if(data.length()==0)
-        return;
-    QStringList strList = data.split(QRegularExpression("[\n]"),Qt::SkipEmptyParts);
-    int labCount = strList.at(0).split("\t").length();
-    labCount -= 3;
-    qDebug() << "multi has: " << labCount << " labs";
-
-    QList<int> initialRowCount;
-    QList<QTableWidget*> widgetList;
-    QList<QList<bool>> addedRows;
-    for(int i = 0; i < ui->bottomLayout->count(); i++) {
-        QVBoxLayout* layout = (QVBoxLayout*)ui->bottomLayout->itemAt(i);
-        QTableWidget* widget = (QTableWidget*)layout->itemAt(1)->widget();
-        initialRowCount.append(widget->rowCount());
-        widget->setRowCount(widget->rowCount()+labCount);
-        QList<bool> newRows;
-        newRows.fill(false,widget->rowCount()+labCount);
-        addedRows.append(newRows);
-        widgetList.append(widget);
-    }
-
-    foreach(QString str, strList) {
-        QStringList split = str.split("\t");
-        QString p = split[0];
-        QString paramName = split[1];
-        QString unit = split[2];
-        QString refRange = split[3];
-
-
-        if(!positions.contains(p)) {
-            qDebug() << "paramter is not tracked: " << p;
-            continue;
-        }
-
-        LabParamPosition pos = positions.value(p);
-
-        for(int i=4;i<split.length();i++) {
-            LabValue lab = LabValue(p, paramName, unit, refRange, split[i]);
-
-            if(lab.success) {
-                qDebug() << "found lab value: " << lab.paramName << " and value: " << lab.value;
-                QString value = lab.getValue();
-                QString prettyValue = value;
-                if(!lab.isPassthrough)
-                    prettyValue += lab.unit;
-                QTableWidgetItem* item = new QTableWidgetItem(prettyValue);
-                item->setData(256,value);
-                item->setTextAlignment(Qt::AlignCenter);
-                item->setToolTip(lab.comment);
-                if(lab.flag=="+")
-                    item->setBackground(QColor(Qt::GlobalColor::red));
-                else if(lab.flag=="-")
-                    item->setBackground(QColor(Qt::GlobalColor::blue));
-
-                if(pos.orientation == "horizontal") {
-                    // we need to track the row!
-                    int widgetIdx = widgetList.indexOf(pos.widget);
-
-                    // we add split.length() rows to each widget, start iterating from i=4(since 0-3 are static values)
-                    // as such intialRowCount + i - 4 = current row
-                    int row = initialRowCount.at(widgetIdx) + i - 4;
-                    QList<bool> newRows = addedRows.at(widgetIdx);
-                    newRows[row] = true;
-                    addedRows[widgetIdx] = newRows;
-                    qDebug() << "replaced addedRows value with " << addedRows.at(widgetIdx).at(row);
-                    qDebug() << "Inserting new horizontal item at widgetIdx: " << widgetIdx
-                             << " in row " << row << " at position " << pos.position;
-                    pos.widget->setItem(row,pos.position,item);
-                } else if(pos.orientation == "vertical") {
-                    if(pos.widget->item(pos.position,0) == nullptr)
-                        pos.widget->setItem(pos.position,0,item);
-                }
-            }
-        }
-    }
-    for(int i = 0; i < widgetList.length(); i++) {
-        QList<bool> rowList = addedRows.value(i);
-        for(int j = rowList.length()-1; j>=0; j--) {
-            if(rowList.at(j) == false) {
-                widgetList.at(i)->removeRow(j);
-            }
-        }
-    }
-
-    ui->rawLab->clear();
 }
