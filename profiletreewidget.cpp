@@ -5,6 +5,7 @@ ProfileTreeWidget::ProfileTreeWidget(QWidget *parent)
     this->setParent(parent);
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     this->setHeaderHidden(true);
+    this->setEditTriggers(QTreeWidget::NoEditTriggers);
     connect(this,&QWidget::customContextMenuRequested,
             this,&ProfileTreeWidget::on_customContextMenuRequested);
 

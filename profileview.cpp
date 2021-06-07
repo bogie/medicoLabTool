@@ -322,6 +322,7 @@ void ProfileView::on_customContextMenuRequested(const QPoint &pos)
         if(orientation == "vertical") {
             menu->addAction(copyRF);
         } else if(orientation == "horizontal") {
+            if(widget->selectedRanges().length()>0)
             if(widget->selectedRanges().at(0).rowCount()>1) {
                 menu->addSeparator();
                 menu->addAction(mergeRow);
