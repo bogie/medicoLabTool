@@ -42,6 +42,7 @@ private slots:
     void on_profileListWidget_customContextMenuRequested(const QPoint &pos);
     void on_okButton_clicked();
     void on_cancelButton_clicked();
+    void on_predefinedTreeWidget_customContextMenuRequested(const QPoint &pos);
 
 private:
     Ui::LabProfileDialog *ui;
@@ -53,6 +54,7 @@ private:
 
     void loadProfiles();
     void saveProfile();
+    void loadPreDefined();
     void selectLabProfile(QString profileName);
     bool createProfileFile(QString profileName);
 };

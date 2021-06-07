@@ -239,103 +239,100 @@ void ProfileView::on_customContextMenuRequested(const QPoint &pos)
         qDebug() << "showing custom context menu for widget";
         QMenu *menu = new QMenu(widget);
         QTableWidgetItem* item = widget->itemAt(pos);
-        if(item == nullptr) {
 
-        } else {
+        QString orientation = tableWidgets.value(widget);
 
-            QString orientation = tableWidgets.value(widget);
+        QAction *copyRow = new QAction(tr("Copy row📋"),this);
+        connect(copyRow, &QAction::triggered, this, [=]() {
+            int row = widget->rowAt(pos.y());
+            on_copyWidgetRow(widget,row);
+        });
+        if(item == nullptr){
+            qDebug() << " no item at this position";
+        }
+        QAction *copyRF = new QAction(tr("Copy column📋"),this);
+        connect(copyRF, &QAction::triggered, this, [=]() {
+            on_copyWidgetColumn(widget);
+        });
 
-            QAction *copyRow = new QAction(tr("Copy row📋"),this);
-            connect(copyRow, &QAction::triggered, this, [=]() {
-                int row = widget->rowAt(pos.y());
-                on_copyWidgetRow(widget,row);
-            });
-            if(item == nullptr){
-                qDebug() << " no item at this position";
-            }
-            QAction *copyRF = new QAction(tr("Copy column📋"),this);
-            connect(copyRF, &QAction::triggered, this, [=]() {
-                on_copyWidgetColumn(widget);
-            });
-
-            QAction *deleteRow = new QAction(tr("Delete row"));
-            connect(deleteRow, &QAction::triggered, this, [=]() {
-                if(widget->selectedRanges().length()>0) {
-                    QList<QTableWidgetSelectionRange> ranges = widget->selectedRanges();
-                    qDebug() << "got ranges length: " << ranges.length();
-                    mergingLabs = true;
-                    for(int i = ranges.length(); i>0; i--) {
-                        QTableWidgetSelectionRange range = ranges.at(i-1);
-                        if((range.bottomRow()-range.topRow()) >= 1) {
-                            for(int r = range.bottomRow(); r >= range.topRow(); r--) {
-                                qDebug() << "removing multi row: " << r;
-                                widget->removeRow(r);
-                            }
-                        } else {
-                            qDebug() << "removing single row: " << range.bottomRow();
-                            widget->removeRow(range.bottomRow());
+        QAction *deleteRow = new QAction(tr("Delete row"));
+        connect(deleteRow, &QAction::triggered, this, [=]() {
+            if(widget->selectedRanges().length()>0) {
+                QList<QTableWidgetSelectionRange> ranges = widget->selectedRanges();
+                qDebug() << "got ranges length: " << ranges.length();
+                mergingLabs = true;
+                for(int i = ranges.length(); i>0; i--) {
+                    QTableWidgetSelectionRange range = ranges.at(i-1);
+                    if((range.bottomRow()-range.topRow()) >= 1) {
+                        for(int r = range.bottomRow(); r >= range.topRow(); r--) {
+                            qDebug() << "removing multi row: " << r;
+                            widget->removeRow(r);
                         }
+                    } else {
+                        qDebug() << "removing single row: " << range.bottomRow();
+                        widget->removeRow(range.bottomRow());
                     }
-                    mergingLabs = false;
                 }
-            });
+                mergingLabs = false;
+            }
+        });
 
 
-                QAction *mergeRow = new QAction("Zeilen kombinieren");
-                connect(mergeRow, &QAction::triggered, this, [=]() {
-                    QList<QTableWidgetSelectionRange> ranges = widget->selectedRanges();
-                    if(ranges.length()==0)
-                        return;
-                    QTableWidgetSelectionRange range = ranges.at(0);
-                    if(range.rowCount()>1 && !mergingLabs) {
-                        qDebug() << "Allow merge!";
-                        QMessageBox box;
-                        box.setText("Sollen die ausgewählten Zeilen kombiniert werden?");
-                        box.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-                        box.setDefaultButton(QMessageBox::No);
-                        int ret = box.exec();
+            QAction *mergeRow = new QAction(tr("Combine rows"));
+            connect(mergeRow, &QAction::triggered, this, [=]() {
+                QList<QTableWidgetSelectionRange> ranges = widget->selectedRanges();
+                if(ranges.length()==0)
+                    return;
+                QTableWidgetSelectionRange range = ranges.at(0);
+                if(range.rowCount()>1 && !mergingLabs) {
+                    qDebug() << "Allow merge!";
+                    QMessageBox box;
+                    box.setText(tr("Do you want to merge selected rows into the first row?\nThis does not overwrite existing data of the first row!"));
+                    box.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+                    box.setDefaultButton(QMessageBox::No);
+                    int ret = box.exec();
 
-                        QList<QString> failureCodes;
-                        failureCodes << "s. Bem" << "entfällt" << "Mat. fehlt" << "folgt";
+                    QList<QString> failureCodes;
+                    failureCodes << "s. Bem" << "entfällt" << "Mat. fehlt" << "folgt";
 
-                        if(ret == QMessageBox::Yes) {
-                            mergingLabs = true;
-                            for(int c = 0; c < widget->columnCount(); c++) {
-                                for(int r = range.topRow()+1; r <= range.bottomRow(); r++) {
-                                    qDebug() << "merging at row: " << r;
-                                    QTableWidgetItem* topItem = widget->item(range.topRow(),c);
-                                    QTableWidgetItem* bottomItem = widget->item(r,c);
+                    if(ret == QMessageBox::Yes) {
+                        mergingLabs = true;
+                        for(int c = 0; c < widget->columnCount(); c++) {
+                            for(int r = range.topRow()+1; r <= range.bottomRow(); r++) {
+                                qDebug() << "merging at row: " << r;
+                                QTableWidgetItem* topItem = widget->item(range.topRow(),c);
+                                QTableWidgetItem* bottomItem = widget->item(r,c);
 
-                                    if(topItem == nullptr || failureCodes.contains(topItem->data(256).toString())) {
-                                        if(bottomItem != nullptr) {
-                                            qDebug() << " bottomItem has text: " << bottomItem->text();
-                                            bottomItem = widget->takeItem(r,c);
-                                            widget->setItem(range.topRow(),c,bottomItem);
-                                            qDebug() << "new position: " << range.topRow() << " column: " << c;
-                                        }
+                                if(topItem == nullptr || failureCodes.contains(topItem->data(256).toString())) {
+                                    if(bottomItem != nullptr) {
+                                        qDebug() << " bottomItem has text: " << bottomItem->text();
+                                        bottomItem = widget->takeItem(r,c);
+                                        widget->setItem(range.topRow(),c,bottomItem);
+                                        qDebug() << "new position: " << range.topRow() << " column: " << c;
                                     }
                                 }
                             }
-                            for(int i = range.bottomRow(); i >= range.topRow()+1; i--)
-                                widget->removeRow(i);
-                            mergingLabs = false;
                         }
+                        for(int i = range.bottomRow(); i >= range.topRow()+1; i--)
+                            widget->removeRow(i);
+                        mergingLabs = false;
                     }
-                });
-
-
-            if(orientation == "vertical") {
-                menu->addAction(copyRF);
-            } else if(orientation == "horizontal") {
-                if(widget->selectedRanges().at(0).rowCount()>1) {
-                    menu->addSeparator();
-                    menu->addAction(mergeRow);
                 }
-                menu->addAction(copyRow);
+            });
+
+
+        if(orientation == "vertical") {
+            menu->addAction(copyRF);
+        } else if(orientation == "horizontal") {
+            if(widget->selectedRanges().at(0).rowCount()>1) {
                 menu->addSeparator();
-                menu->addAction(deleteRow);
+                menu->addAction(mergeRow);
             }
+            menu->addAction(copyRow);
+            menu->addSeparator();
+            menu->addAction(deleteRow);
         }
+
         menu->popup(widget->viewport()->mapToGlobal(pos));
     }
 }

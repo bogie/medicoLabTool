@@ -81,7 +81,7 @@ void MainWindow::loadProfiles()
             ui->profilesComboBox->addItem(profName);
         }
         QString defaultProfile = settings->value("selectedProfile").toString();
-        if(defaultProfile != "" & ui->profilesComboBox->findText(defaultProfile)>=0) {
+        if(defaultProfile != "" && ui->profilesComboBox->findText(defaultProfile)>=0) {
             qDebug() << "selecting default profile " << defaultProfile;
             ui->profilesComboBox->setCurrentText(defaultProfile);
         }

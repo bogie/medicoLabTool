@@ -14,6 +14,7 @@ LabProfileDialog::LabProfileDialog(QWidget *parent) :
     ui->parameterLayout->addWidget(profWidget);
     profiles = new QMap<QString,QSettings*>();
     loadProfiles();
+    loadPreDefined();
 }
 
 LabProfileDialog::~LabProfileDialog()
@@ -108,7 +109,7 @@ void LabProfileDialog::selectLabProfile(QString profileName) {
             pItem->setText(0,param);
             pItem->setData(0,Qt::UserRole,"param");
             QStringList codes = s->value(param).toStringList();
-            pItem->setData(0,0x0101,codes);
+
             for(QString code : codes){
                 QTreeWidgetItem *cItem = new QTreeWidgetItem(pItem);
                 cItem->setText(0,code);
@@ -180,7 +181,10 @@ void LabProfileDialog::saveProfile() {
         for(int c = 0; c < topItem->childCount(); c++) {
             QTreeWidgetItem *param = topItem->child(c);
             order.append(param->text(0));
-            QStringList codes = param->data(0,0x0101).toStringList();
+            QStringList codes;
+            for(int i = 0; i < param->childCount(); i++) {
+                codes.append(param->child(i)->text(0));
+            }
             s->setValue(param->text(0),codes);
         }
         s->endGroup();
@@ -189,6 +193,57 @@ void LabProfileDialog::saveProfile() {
         s->endGroup();
     }
     s->endGroup();
+}
+
+void LabProfileDialog::loadPreDefined()
+{
+    QDir profileDir(QApplication::applicationDirPath());
+    profileDir.cd("profiles");
+    profileDir.setNameFilters(QStringList("*.txt"));
+    profileDir.setFilter(QDir::Files);
+    QStringList profileFileNames = profileDir.entryList();
+
+    QList<QString> addedCodes;
+
+    if(profileFileNames.length() > 0) {
+        for(QString fn : profileFileNames) {
+            QFile f = QFile(profileDir.absoluteFilePath(fn));
+            f.open(QFile::ReadOnly);
+            while(!f.atEnd()) {
+                QString line = QString(f.readLine());
+                line = line.replace("\r","").replace("\n","");
+                QStringList split = line.split("\t");
+                //qDebug() << "split is: " << split;
+                if(split.length()<2)
+                    continue;
+
+                QString code = split.at(0);
+                QString name = split.at(1);
+
+                if(addedCodes.contains(code)) {
+                    qDebug() << "code already added: " << code;
+                    continue;
+                }
+
+                QTreeWidgetItem *pItem = new QTreeWidgetItem(ui->preDefinedTreeWidget);
+                pItem->setText(0,name);
+                pItem->setData(0,Qt::UserRole,"param");
+                QStringList codes(code);
+
+                for(QString code : codes){
+                    QTreeWidgetItem *cItem = new QTreeWidgetItem(pItem);
+                    cItem->setText(0,code);
+                    cItem->setData(0,Qt::UserRole,"code");
+                    QIcon icon(":/icons/codes.png");
+                    cItem->setIcon(0,icon);
+                    pItem->addChild(cItem);
+                }
+                QIcon vial(":/icons/vial.png");
+                pItem->setIcon(0,vial);
+                ui->preDefinedTreeWidget->addTopLevelItem(pItem);
+            }
+        }
+    }
 }
 
 void LabProfileDialog::on_profileListWidget_customContextMenuRequested(const QPoint &pos)
@@ -240,4 +295,9 @@ void LabProfileDialog::on_okButton_clicked()
 void LabProfileDialog::on_cancelButton_clicked()
 {
     this->reject();
+}
+
+void LabProfileDialog::on_predefinedTreeWidget_customContextMenuRequested(const QPoint &pos)
+{
+
 }

@@ -8,7 +8,7 @@ ProfileTreeWidget::ProfileTreeWidget(QWidget *parent)
     connect(this,&QWidget::customContextMenuRequested,
             this,&ProfileTreeWidget::on_customContextMenuRequested);
 
-    this->setDragDropMode(DragDropMode::InternalMove);
+    this->setDragDropMode(DragDropMode::DragDrop);
 }
 
 void ProfileTreeWidget::on_customContextMenuRequested(const QPoint &pos)
@@ -79,7 +79,7 @@ void ProfileTreeWidget::on_customContextMenuRequested(const QPoint &pos)
                     QTreeWidgetItem* child = new QTreeWidgetItem(item);
                     child->setText(0,result.name);
                     child->setData(0,Qt::UserRole,"param");
-                    child->setData(0,0x0101,result.codes);
+
                     for(QString code : result.codes) {
                         if(code.isEmpty())
                             continue;
@@ -100,7 +100,12 @@ void ProfileTreeWidget::on_customContextMenuRequested(const QPoint &pos)
             QAction *modifyParam = new QAction(tr("Modify parameter"),this);
             connect(modifyParam, &QAction::triggered, this, [=]() {
                 ParamDialog pd;
-                pd.setData(item->text(0),item->data(0,0x0101).toStringList());
+                QStringList codes;
+                for(int i = 0; i < item->childCount(); i++) {
+                    codes.append(item->child(i)->text(0));
+                }
+
+                pd.setData(item->text(0),codes);
                 pd.setModal(true);
 
                 if(pd.exec() == QDialog::Accepted) {
@@ -109,7 +114,6 @@ void ProfileTreeWidget::on_customContextMenuRequested(const QPoint &pos)
                              << " with codes: " << result.codes;
                     item->setText(0,result.name);
                     item->setData(0,Qt::UserRole,"param");
-                    item->setData(0,0x0101,result.codes);
                     item->takeChildren();
                     for(QString code : result.codes) {
                         if(code.isEmpty())
@@ -135,7 +139,10 @@ void ProfileTreeWidget::on_customContextMenuRequested(const QPoint &pos)
                 QTreeWidgetItem *parent = item->parent();
                 qDebug() << "Removing code " << item->text(0)
                          << "from parent: " << parent->text(0);
-                QStringList codes = item->data(0,0x0101).toStringList();
+                QStringList codes;
+                for(int i = 0; i < item->childCount(); i++) {
+                    codes.append(item->child(i)->text(0));
+                }
                 codes.removeAll(item->text(0));
                 parent->setData(0,0x0101,codes);
             }
@@ -146,3 +153,110 @@ void ProfileTreeWidget::on_customContextMenuRequested(const QPoint &pos)
     }
     menu->popup(this->viewport()->mapToGlobal(pos));
 }
+
+void ProfileTreeWidget::dropEvent(QDropEvent *event)
+{
+    const QMimeData* qMimeData = event->mimeData();
+    QByteArray encoded = qMimeData->data("application/x-qabstractitemmodeldatalist");
+
+    QTreeWidget* widget = qobject_cast<QTreeWidget*>(event->source());
+    if(widget != nullptr) {
+        QTreeWidgetItem* item = widget->currentItem();
+        QString type = item->data(0,Qt::UserRole).toString();
+
+        QTreeWidgetItem* target = this->itemAt(event->position().toPoint());
+        QString targetType = target->data(0,Qt::UserRole).toString();
+
+        if(item == target) {
+            event->ignore();
+            return;
+        }
+
+        if(type == "table") {
+            event->ignore();
+            return;
+        }
+
+        if(target == nullptr) {
+            event->ignore();
+            return;
+        }
+
+        if(type == "code" && targetType == "table") {
+            return;
+        }
+
+        QModelIndex index = target->treeWidget()->indexAt(event->position().toPoint());
+
+        qDebug() << "index row " << index.row() << " column " << index.column();
+
+        if(event->source() == this) {
+            qDebug() << "dragging to self";
+            if(type == "param") {
+                if(targetType == "param") {
+                    qDebug() << "param to param";
+                    item->parent()->removeChild(item);
+                    QModelIndex newindex = target->treeWidget()->indexAt(event->position().toPoint());
+                    int targetindex = target->parent()->indexOfChild(target);
+                    int row = newindex.row();
+                    if(targetindex == row) {
+                        row++;
+                    }
+                    target->parent()->insertChild(row,item);
+                    event->accept();
+                } else if(targetType == "code") {
+                    event->ignore();
+                } else if(targetType == "table") {
+                    item->parent()->removeChild(item);
+                    target->insertChild(index.row(),item);
+                    event->accept();
+                }
+            } else if(type == "code") {
+                if(targetType == "param") {
+                    item->parent()->removeChild(item);
+                    target->insertChild(index.row(),item);
+                    event->accept();
+                } else if(targetType == "code") {
+                    item->parent()->removeChild(item);
+                    target->parent()->insertChild(index.row(),item);
+                    event->accept();
+                }
+            }
+
+        } else {
+            qDebug() << "not dragging to self";
+
+            if(type == "param") {
+                if(targetType == "param") {
+                    QModelIndex newindex = target->treeWidget()->indexAt(event->position().toPoint());
+                    int targetindex = target->parent()->indexOfChild(target);
+                    int row = newindex.row();
+                    if(targetindex == row) {
+                        row++;
+                    }
+                    target->parent()->insertChild(row,item->clone());
+                    event->accept();
+                } else if(targetType == "table") {
+                    target->insertChild(index.row(),item->clone());
+                    event->accept();
+                }
+            } else if(type == "code") {
+                if(targetType == "param") {
+                    if(target->childCount()== 0) {
+                        target->addChild(item->clone());
+                    } else {
+                    target->insertChild(index.row(),item->clone());
+                    }
+                    event->accept();
+                } else if(targetType == "code") {
+                    target->parent()->insertChild(index.row(),item->clone());
+                    event->accept();
+                }
+            }
+
+        }
+    }
+
+
+}
+

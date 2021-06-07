@@ -6,6 +6,8 @@
 #include <QWidget>
 #include <QMenu>
 #include <QInputDialog>
+#include <QDropEvent>
+#include <QMimeData>
 
 #include "tabledialog.h"
 #include "paramdialog.h"
@@ -18,7 +20,7 @@ public:
 
 private:
     void on_customContextMenuRequested(const QPoint &pos);
-
+    void dropEvent(QDropEvent *event) override;
 };
 
 #endif // PROFILETREEWIDGET_H
