@@ -28,3 +28,9 @@ These represent your typical time series data, each laboratory result in medico 
 to merge results from consecutive rows into the first row without overwriting values already available in the first row.
 
 This is useful if you want to for example combine a point of care blood gas analysis from 6:30am with a complete blood count from 6:50am.
+
+## Profiles
+
+Profiles can be created and modified via settings->profiles, you can drag and drop, right click to add/modify parameters and tables
+
+![profiles view](https://bawki.de/mlt/labtool-profiles.png)
