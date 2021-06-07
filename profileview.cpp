@@ -23,9 +23,9 @@ void ProfileView::loadTables()
     settings->beginGroup("tables");
     QStringList tables = settings->childGroups();
     for(QString table : tables) {
-        QVBoxLayout *l = new QVBoxLayout(this);
-        QLabel *label = new QLabel(table);
-        QTableWidget *newTable = new QTableWidget();
+        QVBoxLayout *l = new QVBoxLayout();
+        QLabel *label = new QLabel(table,l->widget());
+        QTableWidget *newTable = new QTableWidget(l->widget());
         newTable->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(newTable,&QWidget::customContextMenuRequested,
                 this,&ProfileView::on_customContextMenuRequested);
@@ -49,6 +49,7 @@ void ProfileView::loadTables()
         if(orientation=="horizontal") {
             newTable->setColumnCount(order.length());
             newTable->setHorizontalHeaderLabels(order);
+            l->setParent(ui->bottomLayout->widget());
             ui->bottomLayout->addLayout(l);
         }
         else if(orientation=="vertical") {
@@ -56,6 +57,7 @@ void ProfileView::loadTables()
             newTable->setColumnCount(1);
             newTable->setVerticalHeaderLabels(order);
             newTable->setHorizontalHeaderLabels(QStringList("Value"));
+            l->setParent(ui->topLayout->widget());
             ui->topLayout->addLayout(l);
         }
 
@@ -219,11 +221,9 @@ void ProfileView::on_parseCumulativeButton_clicked()
         }
     }
     for(int i = 0; i < widgetList.length(); i++) {
-        qDebug() << "Removing rows for widget: " << i;
         QList<bool> rowList = addedRows.value(i);
         for(int j = rowList.length()-1; j>=0; j--) {
             if(rowList.at(j) == false) {
-                qDebug() << "removing row " << j;
                 widgetList.at(i)->removeRow(j);
             }
         }
@@ -234,9 +234,7 @@ void ProfileView::on_parseCumulativeButton_clicked()
 
 void ProfileView::on_customContextMenuRequested(const QPoint &pos)
 {
-    qDebug() << "Got Custom context menu requested at pos: " << pos;
     if(QTableWidget* widget = qobject_cast<QTableWidget*>(this->sender())) {
-        qDebug() << "showing custom context menu for widget";
         QMenu *menu = new QMenu(widget);
         QTableWidgetItem* item = widget->itemAt(pos);
 
@@ -278,47 +276,47 @@ void ProfileView::on_customContextMenuRequested(const QPoint &pos)
         });
 
 
-            QAction *mergeRow = new QAction(tr("Combine rows"));
-            connect(mergeRow, &QAction::triggered, this, [=]() {
-                QList<QTableWidgetSelectionRange> ranges = widget->selectedRanges();
-                if(ranges.length()==0)
-                    return;
-                QTableWidgetSelectionRange range = ranges.at(0);
-                if(range.rowCount()>1 && !mergingLabs) {
-                    qDebug() << "Allow merge!";
-                    QMessageBox box;
-                    box.setText(tr("Do you want to merge selected rows into the first row?\nThis does not overwrite existing data of the first row!"));
-                    box.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-                    box.setDefaultButton(QMessageBox::No);
-                    int ret = box.exec();
+        QAction *mergeRow = new QAction(tr("Combine rows"));
+        connect(mergeRow, &QAction::triggered, this, [=]() {
+            QList<QTableWidgetSelectionRange> ranges = widget->selectedRanges();
+            if(ranges.length()==0)
+                return;
+            QTableWidgetSelectionRange range = ranges.at(0);
+            if(range.rowCount()>1 && !mergingLabs) {
+                qDebug() << "Allow merge!";
+                QMessageBox box;
+                box.setText(tr("Do you want to merge selected rows into the first row?\nThis does not overwrite existing data of the first row!"));
+                box.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+                box.setDefaultButton(QMessageBox::No);
+                int ret = box.exec();
 
-                    QList<QString> failureCodes;
-                    failureCodes << "s. Bem" << "entfällt" << "Mat. fehlt" << "folgt";
+                QList<QString> failureCodes;
+                failureCodes << "s. Bem" << "entfällt" << "Mat. fehlt" << "folgt";
 
-                    if(ret == QMessageBox::Yes) {
-                        mergingLabs = true;
-                        for(int c = 0; c < widget->columnCount(); c++) {
-                            for(int r = range.topRow()+1; r <= range.bottomRow(); r++) {
-                                qDebug() << "merging at row: " << r;
-                                QTableWidgetItem* topItem = widget->item(range.topRow(),c);
-                                QTableWidgetItem* bottomItem = widget->item(r,c);
+                if(ret == QMessageBox::Yes) {
+                    mergingLabs = true;
+                    for(int c = 0; c < widget->columnCount(); c++) {
+                        for(int r = range.topRow()+1; r <= range.bottomRow(); r++) {
+                            qDebug() << "merging at row: " << r;
+                            QTableWidgetItem* topItem = widget->item(range.topRow(),c);
+                            QTableWidgetItem* bottomItem = widget->item(r,c);
 
-                                if(topItem == nullptr || failureCodes.contains(topItem->data(256).toString())) {
-                                    if(bottomItem != nullptr) {
-                                        qDebug() << " bottomItem has text: " << bottomItem->text();
-                                        bottomItem = widget->takeItem(r,c);
-                                        widget->setItem(range.topRow(),c,bottomItem);
-                                        qDebug() << "new position: " << range.topRow() << " column: " << c;
-                                    }
+                            if(topItem == nullptr || failureCodes.contains(topItem->data(256).toString())) {
+                                if(bottomItem != nullptr) {
+                                    qDebug() << " bottomItem has text: " << bottomItem->text();
+                                    bottomItem = widget->takeItem(r,c);
+                                    widget->setItem(range.topRow(),c,bottomItem);
+                                    qDebug() << "new position: " << range.topRow() << " column: " << c;
                                 }
                             }
                         }
-                        for(int i = range.bottomRow(); i >= range.topRow()+1; i--)
-                            widget->removeRow(i);
-                        mergingLabs = false;
                     }
+                    for(int i = range.bottomRow(); i >= range.topRow()+1; i--)
+                        widget->removeRow(i);
+                    mergingLabs = false;
                 }
-            });
+            }
+        });
 
 
         if(orientation == "vertical") {
@@ -340,21 +338,24 @@ void ProfileView::on_customContextMenuRequested(const QPoint &pos)
 void ProfileView::on_clearAll_clicked()
 {
     for(int i = 0; i < ui->bottomLayout->count(); i++) {
-        QVBoxLayout* layout = (QVBoxLayout*)ui->bottomLayout->itemAt(i);
-        QTableWidget* widget = (QTableWidget*)layout->itemAt(1)->widget();
-        for(int i = widget->rowCount(); i>=0; i--) {
-            widget->removeRow(i);
-        }
-    }
-
-    for(int i = 0; i < ui->topLayout->count(); i++) {
-        QVBoxLayout* layout = (QVBoxLayout*)ui->topLayout->itemAt(i);
-        if(QTableWidget* widget = qobject_cast<QTableWidget*>(layout->itemAt(1)->widget())){
-            widget->clearContents();
+        if(QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->bottomLayout->itemAt(i)->layout())) {
+            if(QTableWidget* widget = qobject_cast<QTableWidget*>(layout->itemAt(1)->widget())) {
+                for(int i = widget->rowCount(); i>=0; i--) {
+                    widget->removeRow(i);
+                }
+            }
         }
 
     }
 
+    for(int i = 1; i < ui->topLayout->count(); i++) {
+        if(QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->topLayout->itemAt(i)->layout())) {
+
+            if(QTableWidget* widget = qobject_cast<QTableWidget*>(layout->itemAt(1)->widget())) {
+                    widget->clearContents();
+            }
+        }
+    }
     ui->rawLab->clear();
 }
 
