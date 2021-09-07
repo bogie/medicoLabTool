@@ -46,13 +46,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="copyAllLabs">
-        <property name="text">
-         <string>Copy all labs</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="clearAll">
         <property name="text">
          <string>New patient</string>

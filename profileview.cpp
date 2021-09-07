@@ -245,6 +245,35 @@ void ProfileView::on_customContextMenuRequested(const QPoint &pos)
             int row = widget->rowAt(pos.y());
             on_copyWidgetRow(widget,row);
         });
+
+        QAction *copyAllRows = new QAction(tr("Copy all rows"), this);
+        connect(copyAllRows, &QAction::triggered, this, [=]() {
+                QByteArray items;
+                qDebug() << "onCopy: roWcount is: " << widget->rowCount();
+                for(int r = 0; r < widget->rowCount(); r++) {
+                    if(widget->verticalHeaderItem(r) != nullptr){
+                        items.append(widget->verticalHeaderItem(r)->text().toUtf8());
+                        items.append("\t\t");
+                    }
+
+                    for(int c = 0; c < widget->columnCount(); c++) {
+                        QTableWidgetItem* item = widget->item(r,c);
+                        if(item == nullptr) {
+                            items.append("");
+                        } else {
+                            items.append(localizeString(item->data(256).toString()));
+                        }
+                        if(c < widget->columnCount()-1)
+                            items.append("\t");
+                    }
+                    if(r< widget->rowCount()-1)
+                        items.append("\n");
+                }
+                QMimeData *mimeData = new QMimeData();
+                mimeData->setData("text/plain",items);
+                QApplication::clipboard()->setMimeData(mimeData);
+        });
+
         if(item == nullptr){
             qDebug() << " no item at this position";
         }
@@ -328,6 +357,7 @@ void ProfileView::on_customContextMenuRequested(const QPoint &pos)
                 menu->addAction(mergeRow);
             }
             menu->addAction(copyRow);
+            menu->addAction(copyAllRows);
             menu->addSeparator();
             menu->addAction(deleteRow);
         }
