@@ -166,6 +166,8 @@ void ProfileTreeWidget::dropEvent(QDropEvent *event)
         QString type = item->data(0,Qt::UserRole).toString();
 
         QTreeWidgetItem* target = this->itemAt(event->position().toPoint());
+        if(target == nullptr)
+            return;
         QString targetType = target->data(0,Qt::UserRole).toString();
 
         if(item == target) {

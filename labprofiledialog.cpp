@@ -195,6 +195,10 @@ void LabProfileDialog::saveProfile() {
     s->endGroup();
 }
 
+void LabProfileDialog::saveParameters() {
+
+}
+
 void LabProfileDialog::loadPreDefined()
 {
     QDir profileDir(QApplication::applicationDirPath());
@@ -224,6 +228,7 @@ void LabProfileDialog::loadPreDefined()
                     qDebug() << "code already added: " << code;
                     continue;
                 }
+                addedCodes.append(code);
 
                 QTreeWidgetItem *pItem = new QTreeWidgetItem(ui->preDefinedTreeWidget);
                 pItem->setText(0,name);
@@ -289,6 +294,7 @@ void LabProfileDialog::on_profileListWidget_customContextMenuRequested(const QPo
 void LabProfileDialog::on_okButton_clicked()
 {
     saveProfile();
+    saveParameters();
     this->accept();
 }
 

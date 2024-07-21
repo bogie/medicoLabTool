@@ -17,6 +17,7 @@ EOSR	Eosinophile Granuloz
 EOSAB	Eo. Granu. (absolut)
 BASR	Basophile Granuloz.
 BASOA	baso. Granu(absolut)
+IG_S	Unreife Granulozyten
 NOROA	Normoblasten absolut
 TPZ	TPZ (Quick)
 INR	INR
@@ -32,6 +33,10 @@ SERUHI	Serum Hämolyse-Index
 NA	Natrium
 K	Kalium
 PHOS	Phosphat
+MG	Magnesium
+CA	Calcium (gesamt)
+CAKOR	Calcium (korrigiert)
+CL	Chlorid
 CHOL	Cholesterin
 HDLC	HDL-Cholesterin
 LDLC	LDL-Cholesterin
@@ -39,12 +44,15 @@ TRIG	Triglyzeride
 99LPAK	#..Lipoprotein (a)
 GLUC	Glukose
 9ALB	#..Albumin
+LIPFT	Lipase
 TBIL	Bilirubin (gesamt)
 DBIL	Bilirubin (direktes)
 AST37	AST (37°C)
 ALT37	ALT (37°C)
 GGT37	gamma-GT (37°C)
+GD37	GLDH (37°C)
 AP37	AP (37°C)
+9CHE37	#..PCHE (37°C)
 LDH37	LDH (37°C)
 CK37	CK (37°C)
 CKMBMa	CK-MB (Masse)
@@ -58,6 +66,7 @@ CRP	CRP
 PCTKM	Procalcitonin
 LACT	Laktat
 9FE	#..Eisen
+9TRF	#..Transferrin
 TRAF	Transferrin
 TRAFS	Transferrinsättigung
 FERR	Ferritin
@@ -134,3 +143,5 @@ QC3438	Quot CD3 CD4/CD3 CD8
 N1656A	NK Zel CD16+/56+ abs
 N1656	NK Zel CD16+/56+rel
 9ACEYE	ACE
+9INSK	#..Insulin
+HOMA	HOMA Index

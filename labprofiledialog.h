@@ -54,6 +54,7 @@ private:
 
     void loadProfiles();
     void saveProfile();
+    void saveParameters();
     void loadPreDefined();
     void selectLabProfile(QString profileName);
     bool createProfileFile(QString profileName);

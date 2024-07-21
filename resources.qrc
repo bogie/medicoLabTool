@@ -8,5 +8,6 @@
     </qresource>
     <qresource prefix="/translations">
         <file>labtool_de.qm</file>
+        <file>translations/labtool_de.ts</file>
     </qresource>
 </RCC>

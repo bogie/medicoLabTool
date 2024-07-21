@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QHeaderView>
 
 class LabParamPosition {
     public:
@@ -46,6 +47,7 @@ private slots:
     void on_copyAllLabs_clicked();
     void on_loadRawLab_clicked();
     void on_customContextMenuRequested(const QPoint &pos);
+    void on_customHeaderContextMenuRequested(const QPoint &pos);
     void on_clearAll_clicked();
     void on_copyWidgetRow(QTableWidget* widget, int row);
     void on_copyWidgetColumn(QTableWidget* widget);

@@ -47,12 +47,18 @@ void ProfileView::loadTables()
         l->addWidget(label);
         l->addWidget(newTable);
         if(orientation=="horizontal") {
+            newTable->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+            connect(newTable->horizontalHeader(),&QWidget::customContextMenuRequested,
+                    this, &ProfileView::on_customHeaderContextMenuRequested);
             newTable->setColumnCount(order.length());
             newTable->setHorizontalHeaderLabels(order);
             l->setParent(ui->bottomLayout->widget());
             ui->bottomLayout->addLayout(l);
         }
         else if(orientation=="vertical") {
+            newTable->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+            connect(newTable->verticalHeader(),&QWidget::customContextMenuRequested,
+                    this, &ProfileView::on_customHeaderContextMenuRequested);
             newTable->setRowCount(order.length());
             newTable->setColumnCount(1);
             newTable->setVerticalHeaderLabels(order);
@@ -230,6 +236,49 @@ void ProfileView::on_parseCumulativeButton_clicked()
     }
 
     ui->rawLab->clear();
+}
+
+void ProfileView::on_customHeaderContextMenuRequested(const QPoint &pos) {
+    if(QTableWidget* widget = qobject_cast<QTableWidget*>(this->sender()->parent())) {
+        QMenu *menu = new QMenu(widget);
+
+        QHeaderView* header = widget->horizontalHeader();
+
+        QAction *copyHeader = new QAction(tr("Copy header📋"),this);
+        connect(copyHeader, &QAction::triggered, this, [=]() {
+            QByteArray items;
+            qDebug() << "header length is: " << header->length();
+            for(int i = 0; i< header->length(); i++) {
+                QTableWidgetItem* item;
+                if(tableWidgets.value(widget) == "horizontal") {
+                    item = widget->horizontalHeaderItem(i);
+                    if(item == nullptr) {
+                        items.append("");
+                    } else {
+                        items.append(localizeString(item->text()));
+                    }
+                    if(i< widget->columnCount()-1){
+                        items.append("\t");
+                    }
+                } else if(tableWidgets.value(widget) == "vertical") {
+                    item = widget->verticalHeaderItem(i);
+                    if(item == nullptr) {
+                        items.append("");
+                    } else {
+                        items.append(localizeString(item->text()));
+                    }
+                    if(i< widget->rowCount()-1){
+                        items.append("\n");
+                    }
+                }
+            }
+            QMimeData *mimeData = new QMimeData();
+            mimeData->setData("text/plain",items);
+            QApplication::clipboard()->setMimeData(mimeData);
+        });
+        menu->addAction(copyHeader);
+        menu->popup(widget->viewport()->mapToGlobal(pos));
+    }
 }
 
 void ProfileView::on_customContextMenuRequested(const QPoint &pos)
