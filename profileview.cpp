@@ -242,7 +242,11 @@ void ProfileView::on_customHeaderContextMenuRequested(const QPoint &pos) {
     if(QTableWidget* widget = qobject_cast<QTableWidget*>(this->sender()->parent())) {
         QMenu *menu = new QMenu(widget);
 
-        QHeaderView* header = widget->horizontalHeader();
+        QHeaderView* header;
+        if(tableWidgets.value(widget) == "horizontal")
+            header = widget->horizontalHeader();
+        else
+            header = widget->verticalHeader();
 
         QAction *copyHeader = new QAction(tr("Copy header📋"),this);
         connect(copyHeader, &QAction::triggered, this, [=]() {
@@ -277,7 +281,8 @@ void ProfileView::on_customHeaderContextMenuRequested(const QPoint &pos) {
             QApplication::clipboard()->setMimeData(mimeData);
         });
         menu->addAction(copyHeader);
-        menu->popup(widget->viewport()->mapToGlobal(pos));
+
+        menu->popup(header->viewport()->mapToGlobal(pos));
     }
 }
 
